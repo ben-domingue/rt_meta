@@ -6,7 +6,7 @@ interplay<-function(x,std.time.in.item=FALSE,nspl=4,plot.den=TRUE,top.plot=TRUE,
     ## th [person theta]
     ## pv [irt-based p-value]
     ## rt [response time in metric you want to analyze]
-    ##resp [item response]
+    ## resp [item response]
     #####################################################################
     nms<-c("item","id","diff","th","pv","rt")
     if (!(all(nms %in% names(x)))) stop("need more columns")

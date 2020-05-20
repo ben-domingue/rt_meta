@@ -123,14 +123,14 @@ cols<-data.frame(pd=pd,col=col.out)
 #######################################################
 ##plotting
 ##when you want a full row at the bottom for the legend
-nn<-length(L)
-m<-matrix(1:nn,byrow=TRUE,ncol=4)
-tmp<-list()
-for (i in 1:nrow(m)) rbind(m[i,],m[i,])->tmp[[i]]
-m<-do.call("rbind",tmp)
-m<-rbind(m,rep(1+nn,3))
+## nn<-length(L)
+## m<-matrix(1:nn,byrow=TRUE,ncol=4)
+## tmp<-list()
+## for (i in 1:nrow(m)) rbind(m[i,],m[i,])->tmp[[i]]
+## m<-do.call("rbind",tmp)
+## m<-rbind(m,rep(1+nn,3))
 ##something else
-m<-matrix(c(1:nn,nn+1,nn+1),nrow=4,ncol=4,byrow=TRUE)
+m<-matrix(c(1:nn,nn+1,nn+1),nrow=5,ncol=4,byrow=TRUE)
 
 layout(m)
 par(mgp=c(2,1,0),mar=c(3,3,1,1),oma=rep(.7,4))

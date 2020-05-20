@@ -1,12 +1,4 @@
 
-M<-numeric()
-for (i in 1:length(filenames)) {
-    load(filenames[[i]])
-    M[i]<-mean(x$rt,na.rm=TRUE)
-}
-filenames<-filenames[order(M)]
-dump("filenames","")
-
 ## cols<-c("black","black","red","red","red","red","blue","blue","blue","blue","blue","blue")
 ## m<-matrix((1:length(filenames)),ncol=3,byrow=TRUE)
 ## m<-cbind(m,length(filenames)+1,length(filenames)+1)
@@ -66,9 +58,9 @@ text(tab[,1],tab[,2],1:nrow(tab),col=cols)
 places<-seq(min(tab[,2]),max(tab[,2]),length.out=nrow(tab))
 mtext(side=4,las=2,at=places,rev(paste(1:nrow(tab),names(filenames))),cex=.7,col='black',line=.2)
 abline(h=log(1),col='black')
-text(.2,log(1),'1 second',col="black",pos=3,cex=1.1)
+text(.2,log(1),'1 second',col="black",pos=3,cex=.8)
 abline(h=log(10),col="black")
-text(.2,log(10),"10 seconds",col="black",pos=3,cex=1.1)
+text(.2,log(10),"10 seconds",col="black",pos=3,cex=.8)
 abline(h=log(60),col="black")
-text(.2,log(60),"60 seconds",col="black",pos=3,cex=1.1)
+text(.2,log(60),"60 seconds",col="black",pos=3,cex=.8)
 

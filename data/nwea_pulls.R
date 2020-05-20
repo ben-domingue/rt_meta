@@ -28,7 +28,24 @@ parfun<-function(fns) {
     x$item<-x$itemkey
     x$itemkey<-NULL
     ##
-    x
+    items<-list(all=1:100,
+            early=1:10,
+            late=30:100)
+    ##all early or late
+    L<-list()
+    for (j in 1:length(items)) {
+        xloc<-x[x$sequence_number %in% items[[j]],]
+        ##sampling
+        ids<-unique(xloc$id)
+        len<-length(ids)
+        if (len>50000) {
+            ids<-sample(ids,50000)
+            xloc<-xloc[xloc$id %in% ids,]
+        }
+        ##
+        L[[names(items)[j]]]<-xloc
+    }
+    L
 }
 
 
@@ -37,12 +54,14 @@ setwd("~/nwea/YxG")
 strsplit(lf,".Rdata")->gr
 txt<-sapply(gr,"[",1)
 
-
 for (txt in c("Winter_3","Winter_8")) {
     index<-grep(txt,lf)
     fns<-lf[index]
-    x<-parfun(fns)
-    x$rt<-x$lrt
-    ##
-    save(x,file=paste("~/nwea/output/longpull_",txt,".Rdata",sep=""))
+    L<-parfun(fns)
+    for (i in 1:length(L)) {
+        x<-L[[i]]
+        x$rt<-x$lrt
+        ##
+        save(x,file=paste("~/rt_meta/nwea/nwea_longpull_",txt,"_",names(L)[i],".Rdata",sep=""))
+        }
 }
