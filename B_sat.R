@@ -14,7 +14,7 @@ for (i in 1:length(filenames)) {
         id<-sample(id,50000)
         x<-x[x$id %in% id,]
     }
-    interplay(std.time.in.item=FALSE,top.plot=FALSE,lm.line=FALSE,x,xlab='log(t)')#,main=names(filenames)[i])
+    interplay(std.time.in.item=FALSE,top.plot=FALSE,lm.line=FALSE,x,xlab='log(t)',xlim=c(-2.5,5.5))
     legend("topleft",bty='n',legend=names(filenames)[i])
     if (i==4) {
         legend("topright",bty='n',lty=c(1,2),c("Incorrect","Correct"),title="Density, log(t)",col='blue',cex=.75)

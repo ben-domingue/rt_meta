@@ -48,6 +48,15 @@ for (ii in 1:length(bigL)) {
     x$th-x$diff -> del
     exp(del)->k
     k/(1+k)->x$pv
+    x->bigL[[ii]]
+}
+
+
+data.frame(rbind(bigL$addition,bigL$subtraction))->bigL[['add.subtract']]
+data.frame(rbind(bigL$multiplication,bigL$division))->bigL[['multiply.divide']]
+
+for (ii in 1:length(bigL)) {
+    x<-bigL[[ii]]
     save(x,file=paste("/home/bd/Dropbox/projects/rt_meta/data/",names(bigL)[ii],".Rdata",sep=''))
 }
 

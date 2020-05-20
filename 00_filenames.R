@@ -3,7 +3,7 @@ list(`RR98 Accuracy` = "rr98_accuracy.Rdata", `Hearts Flowers` = "hf_long.Rdata"
     Hierarchical = "vdl_long_sim.Rdata", DD = "DIFFirt_long_sim.Rdata", 
     Arithmetic = "abcd.Rdata", Groupitizing = "abcd_group.Rdata", 
     Rotation = "dd_rotation.Rdata", Set = "set.Rdata", `Letter Chaos` = "letterchaos.Rdata", 
-    Division = "division.Rdata", Addition = "addition.Rdata", 
+    `Add Subtract` = "add.subtract.Rdata", `Mult Div` = "multiply.divide.Rdata", 
     Chess = "chess.Rdata", Assistments = "assistments.Rdata", 
     PIAAC = "Prgusap1_2017.Rdata", PISA = "pisa_sample.Rdata", 
     `NWEA Grade 3` = "nwea_longpull_Winter_3_all.Rdata", `State Test` = "stateTest.Rdata", 

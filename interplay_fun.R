@@ -1,4 +1,4 @@
-interplay<-function(x,std.time.in.item=FALSE,nspl=4,plot.den=TRUE,top.plot=TRUE,lm.line=TRUE,fe.terms='item+id',bottom.plot=TRUE,xlab="time (10th to 90th percentile)",...) {
+interplay<-function(x,std.time.in.item=FALSE,nspl=4,plot.den=TRUE,top.plot=TRUE,lm.line=TRUE,fe.terms='item+id',bottom.plot=TRUE,xlab="time (10th to 90th percentile)",xlim=NULL,...) {
     ##x needs to have columns:
     ## item [item id]
     ## id [person id]
@@ -24,69 +24,7 @@ interplay<-function(x,std.time.in.item=FALSE,nspl=4,plot.den=TRUE,top.plot=TRUE,
     tmp<-x[,nms]
     x<-x[rowSums(is.na(tmp))==0,]
     #############################################################################
-    ##splining p-values
     library(splines)
-    ## bs(x$pv,df=nspl)->spl
-    ## for (i in 1:ncol(spl)) spl[,i]->x[[paste("spl",i,sep='')]]
-    ## library(fixest) ##won't work on ozzy
-    ## fm.spl<-paste(paste("spl",1:nspl,sep=""),collapse="+")
-    ## fm<-paste("rt~1+resp*(",fm.spl,")|",fe.terms,sep="")
-    ## feols(formula(fm),x)->m
-    ## fm<-paste("rt~1+resp*(",fm.spl,")",sep="")
-    ## lm(fm,x)->m.lm
-    ## ##fit rt based on models
-    ## fe<-fixef(m)
-    ## M<-mean(fe$id)
-    ## index<-which.min(abs(fe$id-M))
-    ## id<-names(fe$id)[index]
-    ## M<-mean(fe$item)
-    ## index<-which.min(abs(fe$item-M))
-    ## item<-names(fe$item)[index]
-    ## ##fitted values
-    ## resp<-0:1
-    ## qu<-quantile(x$pv,c(.05,.95))
-    ## xv<-seq(qu[1],qu[2],length.out=100)
-    ## predict(spl,xv)->tmp
-    ## for (i in 1:ncol(tmp)) colnames(tmp)[i]<-paste("spl",i,sep="")
-    ## ##
-    ## z<-expand.grid(resp=resp,pv.num=1:nrow(tmp))
-    ## tmp<-data.frame(pv.num=1:100,tmp)
-    ## z<-merge(z,tmp)
-    ## z<-merge(z,data.frame(pv.num=1:100,pv=xv))
-    ## z$item<-item
-    ## z$id<-id
-    ## z$lrt.lm<-predict(m.lm,z)
-    ## z$lrt<-predict(m,z,"response")
-    ## ##plotting
-    ## rt.lims<-quantile(x$rt,c(.1,.9),na.rm=TRUE)
-    ## L<-split(z,z$resp)
-    ## par(mgp=c(2,1,0))
-    ## if (top.plot) {
-    ##     plot(NULL,xlim=c(0,1),ylim=rt.lims,xlab="probability",ylab="",...)
-    ##     mtext(side=2,"fitted time (10th-90th percentile\nof empirical distribution)",line=2,cex=.75)
-    ##     for (i in 1:length(L)) {
-    ##         lines(L[[i]]$pv,L[[i]]$lrt,lty=i,lwd=2)
-    ##         lines(L[[i]]$pv,L[[i]]$lrt.lm,lty=i,col="red",lwd=2)
-    ##     }
-    ##     abline(h=0,col="gray")
-    ##     np<-length(unique(x$id))
-    ##     ni<-length(unique(x$item))
-    ##     legend("topleft",bty="n",lty=1:2,c("resp=0","resp=1"),title=paste(np,"people;",ni,"items"))
-    ##     if (plot.den) {
-    ##         den<-density(x$pv)
-    ##         scale.factor<-.25
-    ##         m<-min(den$y)
-    ##         dy<-den$y-m
-    ##         M<-max(den$y)
-    ##         dy<-dy/M
-    ##         dy<-rt.lims[1]+scale.factor*dy*(rt.lims[2]-rt.lims[1])
-    ##         lines(den$x,dy,col="gray")
-    ##         col<-col2rgb('gray')/255
-    ##         col<-rgb(col[1],col[2],col[3],alpha=.5)
-    ##         polygon(c(den$x,rev(den$x)),c(rep(rt.lims[1],length(dy)),rev(dy)),col=col)
-    ##         #text(.5,rt.lims[1]+(rt.lims[2]-rt.lims[1])*scale.factor*.1,"density in gray")
-    ##     }
-    ## }
     #############################################################################
     ##now model accuracy
     rt.lims<-quantile(x$rt,c(.1,.9),na.rm=TRUE)
@@ -127,10 +65,11 @@ interplay<-function(x,std.time.in.item=FALSE,nspl=4,plot.den=TRUE,top.plot=TRUE,
     z$resp.lm<-z$resp.lm-mean(z$resp.lm)
     if (bottom.plot) {
         par(mgp=c(2,1,0))
+        if (is.null(xlim)) xlim<-rt.lims
         if (!top.plot) {
-            plot(z$rt,z$resp,xlim=rt.lims,ylim=c(-.18,.18),xlab=xlab,ylab="Offset to Pr(x=1)",type="l",lwd=3,col='red',...)
+            plot(z$rt,z$resp,xlim=xlim,ylim=c(-.18,.18),xlab=xlab,ylab="Offset to Pr(x=1)",type="l",lwd=3,col='red',...)
         } else {
-            plot(z$rt,z$resp,xlim=rt.lims,ylim=c(-.18,.18),xlab=xlab,ylab="Offset to Pr(x=1)",type="l",lwd=3,col='red')
+            plot(z$rt,z$resp,xlim=xlim,ylim=c(-.18,.18),xlab=xlab,ylab="Offset to Pr(x=1)",type="l",lwd=3,col='red')
         }
         if (lm.line) lines(z$rt,z$resp.lm,col="gray",lwd=3)
         abline(h=0,col='gray')
