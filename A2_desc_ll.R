@@ -84,6 +84,8 @@ ff<-function(fn) {
     resp<-resp[,nr>1]
     ##get item difficulties
     newdiff<-!grepl("nwea",fn)
+    newdiff<-newdiff & !grepl("assistments",fn)
+    #newdiff<-FALSE
     if (newdiff) {
         rs<-rowSums(!is.na(resp))
         resp<-resp[rs>1,]
@@ -174,9 +176,13 @@ list(`RR98 Accuracy` = "rr98_accuracy.Rdata", `Hearts Flowers` = "hf_long.Rdata"
     PIAAC = "Prgusap1_2017.Rdata", PISA = "pisa_sample.Rdata", 
     `NWEA Grade 3` = "nwea_longpull_Winter_3_all.Rdata", `State Test` = "stateTest.Rdata", 
     `NWEA Grade 8` = "nwea_longpull_Winter_8_all.Rdata")
+filenames<-filenames[-c(1,2)]
+
+
+## filenames<-list(nwea_longpull_Winter_3_early = "nwea_longpull_Winter_3_early.Rdata", 
+##                 nwea_longpull_Winter_3_late = "nwea_longpull_Winter_3_late.Rdata")
 
 tab<-list()
-filenames<-filenames[-c(1,2,13)]
 for (iii in 1:length(filenames)) {
     tab[[names(filenames)[iii] ]]<-ff(filenames[[iii]])
     cl<-lapply(tab,class)
@@ -197,10 +203,13 @@ list(Hierarchical = c(0.545159768469895, 0.635949501379163, 0.629852019529017
 ), `Add Subtract` = c(0.568834199934641, 0.569111459005505, 0.569099974733311
 ), `Mult Div` = c(0.570028446422707, 0.566010064920537, 0.567592131094978
 ), Chess = c(0.61737215700602, 0.672909206145369, 0.674534336513434
-), PIAAC = c(0.657011396956108, 0.782877574352203, 0.817966645530603
+), Assistments=c(0.543479922403573, 0.591255010861052, 0.58985185041484
+),PIAAC = c(0.657011396956108, 0.782877574352203, 0.817966645530603
 ), PISA = c(0.534750337833254, 0.576245243192357, 0.575209364197949
-), `NWEA Grade 3` = c(0.51119500435618, 0.511139603075451, 0.507735012607335
-), `State Test` = c(0.617096429228106, 0.655367619735881, 0.656042772666115
+), `NWEA Grade 3` = c(0.51119500435618, 0.511139603075451, 0.507735012607335)
+#,nwea_longpull_Winter_3_early = c(0.521551878320537, 0.50322801670279,0.467784715733254)
+#, nwea_longpull_Winter_3_late = c(0.508210205910443, 0.482555434043791, 0.466216627063239)                      
+, `State Test` = c(0.617096429228106, 0.655367619735881, 0.656042772666115
 ), `NWEA Grade 8` = c(0.510854123964928, 0.512074116106046, 0.507701358861554
 ))
 tab<-do.call("rbind",tab)
@@ -211,4 +220,5 @@ barplot2(t(tab-.5),beside=TRUE,horiz=TRUE,las=2,col=c("blue","red","pink"),xlim=
 axis(side=1,at=c(0,.25,.5),c(".5",".75","1"))
 legend("topright",bty='n',rev(c("item p","irt p","irt p + rt")),fill=rev(c("blue","red","pink")))
 for (v in seq(0,.5,by=.05)) abline(v=v,col='gray',lwd=.5)
+
 

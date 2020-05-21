@@ -9,7 +9,7 @@ x$id <- x$user_id
 x$item <- x$problem_id
 
 tab<-table(x$item)
-tab<-tab[tab>10]
+tab<-tab[tab>20]
 x<-x[x$item %in% names(tab),]
 
 tab<-table(x$id)
