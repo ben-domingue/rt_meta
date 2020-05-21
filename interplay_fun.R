@@ -67,9 +67,9 @@ interplay<-function(x,std.time.in.item=FALSE,nspl=4,plot.den=TRUE,top.plot=TRUE,
         par(mgp=c(2,1,0))
         if (is.null(xlim)) xlim<-rt.lims
         if (!top.plot) {
-            plot(z$rt,z$resp,xlim=xlim,ylim=c(-.18,.18),xlab=xlab,ylab="Offset to Pr(x=1)",type="l",lwd=3,col='red',...)
+            plot(z$rt,z$resp,xlim=xlim,ylim=c(-.18,.18),xlab=xlab,type="l",lwd=3,col='blue',...)
         } else {
-            plot(z$rt,z$resp,xlim=xlim,ylim=c(-.18,.18),xlab=xlab,ylab="Offset to Pr(x=1)",type="l",lwd=3,col='red')
+            plot(z$rt,z$resp,xlim=xlim,ylim=c(-.18,.18),xlab=xlab,type="l",lwd=3,col='blue')
         }
         if (lm.line) lines(z$rt,z$resp.lm,col="gray",lwd=3)
         abline(h=0,col='gray')
@@ -94,6 +94,7 @@ interplay<-function(x,std.time.in.item=FALSE,nspl=4,plot.den=TRUE,top.plot=TRUE,
         if (plot.den) {
             xcenter<-mean(rt.lims)
             c(-.2,.2)->rt.lims
+            resp.col<-c("red","green")
             for (resp in 0:1) {
                 den<-density(x$rt[x$resp==resp])
                 scale.factor<-.25
@@ -103,9 +104,9 @@ interplay<-function(x,std.time.in.item=FALSE,nspl=4,plot.den=TRUE,top.plot=TRUE,
                 dy<-dy/M
                 dy<-rt.lims[1]+scale.factor*dy*(rt.lims[2]-rt.lims[1])
                 lines(den$x,dy,col="blue",lty=resp+1)
-                #col<-col2rgb('blue')/255
-                #col<-rgb(col[1],col[2],col[3],alpha=.5)
-                #polygon(c(den$x,rev(den$x)),c(rep(rt.lims[1],length(dy)),rev(dy)),col=col)
+                col<-col2rgb(resp.col[resp+1])/255
+                col<-rgb(col[1],col[2],col[3],alpha=.5)
+                polygon(c(den$x,rev(den$x)),c(rep(rt.lims[1],length(dy)),rev(dy)),col=col)
                 #text(xcenter,rt.lims[1]+(rt.lims[2]-rt.lims[1])*scale.factor*.1,"density in blue")
             }
         }
