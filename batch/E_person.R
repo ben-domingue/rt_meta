@@ -38,7 +38,7 @@ person_analysis<-function(x) {
     tmp<-lapply(L,f)
     tmp<-do.call("rbind",tmp)
     m<-mean(tmp[,2],na.rm=TRUE)
-    r<-cor(tmp[,1],tmp[,2],use='p')
-    c(coors,m,r)
+    r<-cor.test(tmp[,1],tmp[,2],use='p')
+    c(coors,m,r$est,r$conf.int)
 }
 

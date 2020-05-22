@@ -1,4 +1,3 @@
-
 #################################################################
 ##figure 1
 ff<-function(fn) {
@@ -14,9 +13,21 @@ pdf("/tmp/desc.pdf",width=9,height=3.5)
 par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(2,3,1,1),oma=rep(1,4))
 N<-length(filenames)
 cols<-rep("blue",length(filenames))
-##plot(NULL,ylim=c(-9,11),xlim=c(.5,N+.5),xaxt="n",xlab='',ylab='log(t)',bty='n',xaxt='n')
-#axis(side=1,at=1:N,as.character(1:N),cex.axis=.7,gap.axis=0)
+ran<-sapply(L,function(x) range(x$den[,1]))
+plot(NULL,ylim=range(as.numeric(ran)),xlim=c(.5,N+.5),xaxt="n",xlab='',ylab='log(t)',bty='n')
+axis(side=1,at=1:N,as.character(1:N),cex.axis=.7,gap.axis=0)
 #boxplot(rt~test,den,pch=19,col=cols,ylab="log(t)",outcex=.5,outcol=cols,add=TRUE,xaxt='n')
+for (i in 1:length(L)) {
+    d<-L[[i]]$den
+    M<-max(d[,2])
+    d[,2]/M->d[,2]
+    lines((d[,2]+i),d[,1])
+    col<-'lightblue'
+    col<-col2rgb(col)/255
+    col<-rgb(col[1],col[2],col[3],alpha=.5)
+    dy<-min(d[,2])
+    polygon(c(rep(i,nrow(d)),rev(i+d[,2])),c(d[,1],rev(d[,1])),col=col,border=NA)
+}
 #
 par(mar=c(3,3,1,7))
 plot(tab[,1:2],xlab="Mean item-level accuracy",ylab="Mean item-level log(t)",cex=0,xlim=c(0,1),ylim=c(-1,5),bty="n")
@@ -24,11 +35,11 @@ text(tab[,1],tab[,2],1:nrow(tab),col=cols)
 places<-seq(min(tab[,2]),max(tab[,2]),length.out=nrow(tab))
 mtext(side=4,las=2,at=places,rev(paste(1:nrow(tab),names(filenames))),cex=.7,col='black',line=.2)
 abline(h=log(1),col='black')
-text(.2,log(1),'1 second',col="black",pos=3,cex=.8)
+text(.2,log(1),'1s',col="black",pos=3,cex=.8)
 abline(h=log(10),col="black")
-text(.2,log(10),"10 seconds",col="black",pos=3,cex=.8)
+text(.2,log(10),"10s",col="black",pos=3,cex=.8)
 abline(h=log(60),col="black")
-text(.2,log(60),"60 seconds",col="black",pos=3,cex=.8)
+text(.2,log(60),"60s",col="black",pos=3,cex=.8)
 dev.off()
 
 #################################################################
@@ -67,7 +78,13 @@ for (i in 1:length(L)) {
         dy<-min(den[,2])
         polygon(c(den[,1],rev(den[,1])),c(rep(dy,nrow(den)),rev(den[,2])),col=col,border=NA)
     }
-    lines(L[[i]]$pts,col="blue",lwd=3)
+    tmp<-L[[i]]$sat$pts
+    lines(tmp[,1:2],col="blue",lwd=3)
+    if (ncol(tmp)>2) {
+        col<-col2rgb("blue")/255
+        col<-rgb(col[1],col[2],col[3],alpha=.5)
+        polygon(c(tmp[,1],rev(tmp[,1])),c(tmp[,3],rev(tmp[,4])),col=col,border=NA)
+    }
 }
 dev.off()
 

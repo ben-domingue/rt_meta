@@ -27,7 +27,7 @@ for (fn in filenames) {
     
     ####################################################################################
     ##sat
-    output$sat<-interplay(x)
+    output$sat<-interplay(x,nboot=250)
     
     ##for fun
     ##plot(output$sat$pts,ylim=c(-.18,.18),xlim=c(-2,5),type='l')

@@ -33,6 +33,6 @@ item_analysis<-function(x) {
         nn<-sum(sig[,2]<0)
     } else 0->np->nn
     r<-cor.test(x[,1],x[,2],use='p')
-    if (r$p.value<.05) r0<-round(r$estimate,2) else r0<-''
-    c(n,round(100*np/n),round(100*nn/n),r0)
+    #if (r$p.value<.05) r0<-round(r$estimate,2) else r0<-''
+    c(n,round(100*np/n),round(100*nn/n),r$est,r$conf.int)
 }
