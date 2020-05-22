@@ -1,0 +1,119 @@
+
+#################################################################
+##figure 1
+ff<-function(fn) {
+    load(paste("proc_",fn,sep=''))
+    output$desc2
+}
+L<-lapply(filenames,ff)
+
+tab<-lapply(L,function(x) x$vals)
+tab<-do.call("rbind",tab)
+
+pdf("/tmp/desc.pdf",width=9,height=3.5)
+par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(2,3,1,1),oma=rep(1,4))
+N<-length(filenames)
+cols<-rep("blue",length(filenames))
+##plot(NULL,ylim=c(-9,11),xlim=c(.5,N+.5),xaxt="n",xlab='',ylab='log(t)',bty='n',xaxt='n')
+#axis(side=1,at=1:N,as.character(1:N),cex.axis=.7,gap.axis=0)
+#boxplot(rt~test,den,pch=19,col=cols,ylab="log(t)",outcex=.5,outcol=cols,add=TRUE,xaxt='n')
+#
+par(mar=c(3,3,1,7))
+plot(tab[,1:2],xlab="Mean item-level accuracy",ylab="Mean item-level log(t)",cex=0,xlim=c(0,1),ylim=c(-1,5),bty="n")
+text(tab[,1],tab[,2],1:nrow(tab),col=cols)
+places<-seq(min(tab[,2]),max(tab[,2]),length.out=nrow(tab))
+mtext(side=4,las=2,at=places,rev(paste(1:nrow(tab),names(filenames))),cex=.7,col='black',line=.2)
+abline(h=log(1),col='black')
+text(.2,log(1),'1 second',col="black",pos=3,cex=.8)
+abline(h=log(10),col="black")
+text(.2,log(10),"10 seconds",col="black",pos=3,cex=.8)
+abline(h=log(60),col="black")
+text(.2,log(60),"60 seconds",col="black",pos=3,cex=.8)
+dev.off()
+
+#################################################################
+##figure 2
+ff<-function(fn) {
+    load(paste("proc_",fn,sep=''))
+    output$sat
+}
+L<-lapply(filenames,ff)
+
+timelimits<-c("RR98 Accuracy"=10000, "Hearts Flowers"=log(1.5), "Hierarchical"=10000, "DD"=10000, "Arithmetic"=10000, 
+"Groupitizing"=10000, "Rotation"=log(7.5), "Set"=10000, "Letter Chaos"=10000, "Add Subtract"=log(20), 
+"Mult Div"=log(20), "Chess", "Assistments"=10000, "PIAAC"=10000, "PISA"=10000, "NWEA Grade 3"=10000, 
+"State Test"=10000, "NWEA Grade 8"=10000)
+
+pdf("/tmp/sat.pdf",width=7,height=9)
+par(mfrow=c(6,3),mar=c(2,2,1,1),oma=c(2,2,.7,.7)) 
+for (i in 1:length(L)) {
+    plot(NULL,xlim=c(-2.5,5.5),ylim=c(-.18,.18),xlab='',ylab='',yaxt='n')
+    axis(side=2,at=c(-.1,0,.1))
+    legend("topleft",bty='n',legend=names(L)[i])
+    abline(v=timelimits[names(filenames)[i] ],col='gray',lwd=3)
+    abline(h=0,col='gray')
+    if (i==16) {
+        mtext(side=1,'log(t)',line=2,cex=1)
+        mtext(side=2,'Offset to Pr(x=1)',line=2,cex=1)
+    }
+    resp.col<-c("firebrick1","darkorchid")
+    if (i==3) {
+        legend("topright",bty='n',c("Incorrect","Correct"),title="Density, log(t)",fill=resp.col,cex=1)
+    }
+    for (resp in 0:1) {
+        den<-L[[i]]$dens[[as.character(resp)]]
+        col<-col2rgb(resp.col[resp+1])/255
+        col<-rgb(col[1],col[2],col[3],alpha=.5)
+        dy<-min(den[,2])
+        polygon(c(den[,1],rev(den[,1])),c(rep(dy,nrow(den)),rev(den[,2])),col=col,border=NA)
+    }
+    lines(L[[i]]$pts,col="blue",lwd=3)
+}
+dev.off()
+
+#################################################################
+##figure 3
+ff<-function(fn) {
+    load(paste("proc_",fn,sep=''))
+    output$grad
+}
+L<-lapply(filenames,ff)
+ran<-c(-.25,.25) #####these need to match the values in C_gradient.R
+cols<-seq(-6,6,length.out=5000)
+##translate cols via the logistic
+pr<-1/(1+exp(-cols))
+pd<-pr*(ran[2]-ran[1])+ran[1]
+cols1<-colorRampPalette(c("red", "white"))(1000)
+cols2<-rev(colorRampPalette(c("blue", "white"))(1000))
+cols<-c(cols1,cols2)
+pv<-seq(0,1,length.out=length(cols))
+col.out<-rep(NA,length(pr))
+for (i in 1:length(pr)) {    
+    index<-which.min(abs(pr[i]-pv))
+    col.out[i]<-cols[index]
+}
+cols<-data.frame(pd=pd,col=col.out)
+
+pdf("/tmp/sat_challenge.pdf",width=7,height=9)
+nn<-length(filenames)
+m<-matrix(c(1:nn,nn+1,nn+1),nrow=5,ncol=4,byrow=TRUE)
+layout(m)
+par(mgp=c(2,1,0),mar=c(3,3,1,1),oma=rep(.7,4))
+for (i in 1:length(L)) {
+    z<-L[[i]]
+    plot(z[,1:2],col=z[,3],main=names(L)[i],xlab='',ylab='')
+    if (i==17) {
+        mtext(side=2,line=2,"Pr(x=1)")
+        mtext(side=1,line=2,"log(t)")
+    }
+}
+##color legend
+par(mar=c(2,5,.2,5))
+plot(cols$pd,rep(0,nrow(cols)),col=cols$col,pch=19,cex=.5,xaxt="n",yaxt="n",ylab="",xlab="",bty="n")
+mtext(side=2,#cols$pd[1],0,
+      las=2,format(round(cols$pd[1],2),digits=2),col=cols$col[1])
+n<-nrow(cols)
+mtext(side=4,#cols$pd[n],0,
+      las=2,paste(format(round(cols$pd[n],2),digits=2),"+",sep=""),col=cols$col[n])
+mtext(side=1,expression(frac(partialdiff*f,partialdiff*t)),cex=.9,line=-1)
+dev.off()
