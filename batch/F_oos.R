@@ -1,0 +1,228 @@
+
+
+
+oos_pred<-function(x,pv.lmer=TRUE) {
+    lll<-rms<-list()
+    ll<-function(x,p='pv') {
+        z<-log(x[[p]])*x$resp+log(1-x[[p]])*(1-x$resp)
+        z<-sum(z)/nrow(x)
+        exp(z)
+    }    
+    rmse<-function(x,p='pv') {
+        z<-(x$resp-x[[p]])^2#log(x[[p]])*x$resp+log(1-x[[p]])*(1-x$resp)
+        sqrt(mean(z))
+    }    
+    ##
+    id<-paste(x$id,x$item)
+    tab<-table(id)
+    #
+    if (!pv.lmer) x<-x[id %in% names(tab)[tab==1],] #mirt approach won't allow for missing
+    ##in & out
+    n<-round(.1*nrow(x))
+    in.out<-sort(sample(1:nrow(x),n))
+    in.in<-1:nrow(x)
+    in.in<-in.in[-in.out]
+    oos<-x[in.out,]
+    x<-x[in.in,]
+    ##mirt or lmer needs to create
+    ##lmer
+    if (pv.lmer) {
+        library(lme4)
+        m<-glmer(resp~0+(1|item)+(1|id),x,family="binomial")
+        #m<-lmer(resp~0+(1|item)+(1|id),x)
+        ranef(m)$item->fe
+        item<-data.frame(item=rownames(fe),diff=-1*fe[,1])
+        re<-ranef(m)$id
+        stud<-data.frame(id=rownames(re),th=re[,1])
+    }
+    ##make response matrix
+    id<-unique(x$id)
+    L<-split(x,x$item)
+    out<-list()
+    for (i in 1:length(L)) {
+        z<-L[[i]]
+        index<-match(z$id,id)
+            resp<-rep(NA,length(id))
+            resp[index]<-z$resp
+        out[[i]]<-resp
+    }
+    resp<-do.call("cbind",out)
+    resp<-data.frame(resp)
+    names(resp)<-names(L)
+    cm<-colMeans(resp,na.rm=TRUE)
+    itemp<-data.frame(item=names(L),itemp=cm)
+    resp$id<-id
+    nr<-apply(resp,2,function(x) length(table(x)))
+    resp<-resp[,nr>1]
+    if (!pv.lmer) {
+        ##mirt
+        ##get item difficulties
+        newdiff<-!grepl("nwea",fn)
+        newdiff<-newdiff & !grepl("assistments",fn)
+        #newdiff<-FALSE
+        if (newdiff) {
+            rs<-rowSums(!is.na(resp))
+            resp<-resp[rs>1,]
+            library(mirt)
+            index<-grep('id',names(resp))
+            m<-mirt(resp[,-index],1,"Rasch")
+            co<-coef(m)
+            co<-do.call("rbind",co[-length(co)])
+            item<-data.frame(item=names(resp)[-index],diff=-1*co[,2])
+        } else {
+            co<-x[,c("item","diff")]
+            item<-co[!duplicated(co$item),]
+            item$diff<- (item$diff-mean(item$diff,na.rm=TRUE))/sd(item$diff,na.rm=TRUE) #given that the nwea parameters are on weird scale
+        }
+        ##get theta
+        x$th<-x$diff<-x$pv<-NULL
+        x<-merge(x,item)
+        get.th<-function(x) {
+            if (all(0:1 %in% x$resp)) {
+                sigmoid<-function(x) 1/(1+exp(-x))
+                ll<-function(th,x) {
+                    ##
+                    p<- (th - x$diff)
+                    p<-sigmoid(p)
+                    loglik<-x$resp*log(p) + (1-x$resp)*log(1-p)
+                    sum(loglik)
+                }
+                ##optimization
+                fit<-optim(0,ll,
+                           x=x,control=list("fnscale"=-1),
+                           lower=-5,
+                           upper=5,
+                           method="Brent",
+                           hessian=TRUE
+                           )
+                fit$par
+            } else NA
+        }
+        library(parallel)
+        L2<-split(x,x$id)
+        L2<-mclapply(L2,get.th,mc.cores=25)
+        stud<-data.frame(id=names(L2),th=unlist(L2))
+    }
+    ##now begin work with oos
+    NULL->oos$th->oos$diff->oos$pv
+    df<-merge(oos,stud)
+    df<-merge(df,item)
+    ##
+    df$th-df$diff -> del
+    exp(del)->k
+    df$pv<-k/(1+k)
+    ##
+    df<-merge(df,itemp)
+    df<-df[!is.na(df$resp) & !is.na(df$pv),]
+    df<-df[df$itemp>0 & df$itemp<1,]
+    mean(df$resp,na.rm=TRUE)->df$p000
+    lll$base<-ll(df,p='p000')
+    rms$base<-rmse(df,p='p000')
+    lll$item<-ll(df,p='itemp')
+    rms$item<-rmse(df,p='itemp')
+    lll$irt<-ll(df,p='pv')
+    rms$irt<-rmse(df,p='pv')
+    ##now need to add the time model, first estimating in-sample
+    NULL->x$th->x$diff->x$pv
+    x<-merge(x,stud)
+    x<-merge(x,item)
+    x$th-x$diff -> del
+    exp(del)->k
+    x$pv<-k/(1+k)
+    m<-by(x$rt,x$item,mean,na.rm=TRUE)
+    s<-by(x$rt,x$item,sd,na.rm=TRUE)
+    tmp<-data.frame(item=names(m),m=as.numeric(m),s=as.numeric(s))
+    x<-merge(x,tmp)
+    x$rt<-(x$rt-x$m)/x$s
+    m2<-glm(resp~pv+rt,x,family="binomial")
+    ##
+    df<-df[!is.na(df$rt),]
+    df<-merge(df,tmp)
+    df$rt<-(df$rt-df$m)/df$s
+    df$pv.rt<-predict(m2,df,type='response')
+    lll$rt<-ll(df,p='pv.rt')
+    rms$rt<-rmse(df,p='pv.rt')
+    ##splines
+    library(splines)
+    spl<-bs(x$rt,df=4)
+    for (i in 1:ncol(spl)) spl[,i]->x[[paste("spl",i,sep='')]]
+    m3<-glm(resp~pv+spl1+spl2+spl3+spl4,x,family="binomial")
+    m4<-glm(resp~spl1+spl2+spl3+spl4,x,family="binomial")
+    spl<-predict(spl,df$rt)
+    for (i in 1:ncol(spl)) spl[,i]->df[[paste("spl",i,sep='')]]
+    df$pv.rt2<-predict(m3,df,type='response')
+    lll$rt2<-ll(df,p='pv.rt2')
+    rms$rt2<-rmse(df,p='pv.rt2')
+    df$pv.rtonly<-predict(m4,df,type='response')
+    lll$rt.only<-ll(df,p='pv.rtonly')
+    rms$rt.only<-rmse(df,p='pv.rtonly')
+    ##
+    list(lll,rms)
+}
+
+meth.flag <-
+    list(`RR98 Accuracy` = TRUE,
+         `Hearts Flowers` = TRUE,
+         Assistments = TRUE, 
+         ##
+         Hierarchical =FALSE,
+         DD = FALSE,
+         Arithmetic =FALSE,
+         Groupitizing = FALSE, 
+         Rotation = FALSE,
+         Set = FALSE,
+         `Letter Chaos` = FALSE,
+         `Add Subtract` = FALSE,
+         `Mult Div` = FALSE, 
+         Chess = FALSE,
+         PIAAC = FALSE,
+         PISA = FALSE,
+         `NWEA Grade 3` = FALSE,
+         `NWEA Grade 8` = FALSE
+         )
+
+
+
+#setwd("/home/bd/Dropbox/projects/rt_meta/data")
+tab<-list()
+for (i in 1:length(meth.flag)) {
+    fn<-filenames[[names(meth.flag)[i] ]]
+    print(fn)
+    setwd("~/rt_meta/")
+    load(fn)
+    tab[[fn]]<-oos_pred(x,pv.lmer=meth.flag[[i]])
+    dump("tab","")
+}
+
+
+tab.out<-list()
+for (i in 1:2) {
+    l<-lapply(tab,'[',i)
+    l<-lapply(l,unlist)
+    tab.out[[i]]<-do.call("rbind",l)
+}
+tab.out->tab
+
+ff<-function(z) {
+    library(xtable)
+    z<-z[,c("base","item","irt","rt.only","rt","rt2")]
+    index<-match(rownames(z),filenames)
+    rownames(z)<-names(filenames)[index]
+    xtable(z)
+}
+lapply(tab,ff)
+
+## par(mfrow=c(2,1),mgp=c(2,1,0),mar=c(3,10,1.5,1),xpd=NA)
+## library(gplots)
+## cols<-colorRampPalette(c("blue", "red"))( 5)
+## ##
+## tab[[1]]->tab1
+## barplot2(t(tab1),beside=TRUE,horiz=TRUE,las=2,xaxt='n',xlim=c(.5,1),xpd=FALSE,cex.names=.7,col=cols)
+## mtext(side=3,line=.2,'likelihood')
+## axis(side=1)
+## legend("topright",bty='n',fill=cols,colnames(tab1))
+## ##
+## tab[[2]]->tab2
+## barplot2(t(tab2),beside=TRUE,horiz=TRUE,las=2,xaxt='n',xlim=c(0,.5),xpd=FALSE,cex.names=.7,col=cols)
+## mtext(side=3,line=.2,'rmse')
+## axis(side=1)

@@ -1,5 +1,5 @@
 filenames <-
-list(`RR98 Accuracy` = "rr98_accuracy.Rdata", `Hearts Flowers` = "hf_long.Rdata", 
+list(`RR98 Accuracy` = "rr98_accuracy.Rdata", `Hearts Flowers` = "hf_long_m2t.Rdata", 
     Hierarchical = "vdl_long_sim.Rdata", DD = "DIFFirt_long_sim.Rdata", 
     Arithmetic = "abcd.Rdata", Groupitizing = "abcd_group.Rdata", 
     Rotation = "dd_rotation.Rdata", Set = "set.Rdata", `Letter Chaos` = "letterchaos.Rdata", 
@@ -40,6 +40,13 @@ filenames<-z
 
 ##nwea
 filenames<-list.files(pattern="^nwea*.+Rdata")
+txt<-gsub(".Rdata","",filenames,fixed=TRUE)
+z<-list()
+for (i in 1:length(txt)) z[[txt[i] ]]<-filenames[i]
+filenames<-z
+
+##ames
+filenames<-list.files(pattern="^hf_long*.+Rdata")
 txt<-gsub(".Rdata","",filenames,fixed=TRUE)
 z<-list()
 for (i in 1:length(txt)) z[[txt[i] ]]<-filenames[i]

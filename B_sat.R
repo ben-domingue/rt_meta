@@ -8,7 +8,6 @@ timelimits<-c("RR98 Accuracy"=10000, "Hearts Flowers"=log(1.5), "Hierarchical"=1
 
 
 ##normal
-pdf("/tmp/sat.pdf",width=7,height=9)
 par(mfrow=c(5,4),mar=c(2,2,1,1),oma=c(2,2,.7,.7)) 
 L<-list()
 for (i in 1:length(filenames)) {
@@ -25,7 +24,6 @@ for (i in 1:length(filenames)) {
         legend("topright",bty='n',c("Incorrect","Correct"),title="Density, log(t)",fill=c("red","green"),cex=1)
     }
 }
-dev.off()
 
 ###################################################################################
 

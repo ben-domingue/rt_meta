@@ -20,7 +20,7 @@ axis(side=1,at=1:N,as.character(1:N),cex.axis=.7,gap.axis=0)
 for (i in 1:length(L)) {
     d<-L[[i]]$den
     M<-max(d[,2])
-    d[,2]/M->d[,2]
+    .9*d[,2]/M->d[,2]
     lines((d[,2]+i),d[,1])
     col<-'lightblue'
     col<-col2rgb(col)/255
@@ -52,7 +52,7 @@ L<-lapply(filenames,ff)
 
 timelimits<-c("RR98 Accuracy"=10000, "Hearts Flowers"=log(1.5), "Hierarchical"=10000, "DD"=10000, "Arithmetic"=10000, 
 "Groupitizing"=10000, "Rotation"=log(7.5), "Set"=10000, "Letter Chaos"=10000, "Add Subtract"=log(20), 
-"Mult Div"=log(20), "Chess", "Assistments"=10000, "PIAAC"=10000, "PISA"=10000, "NWEA Grade 3"=10000, 
+"Mult Div"=log(20), "Chess"=10000, "Assistments"=10000, "PIAAC"=10000, "PISA"=10000, "NWEA Grade 3"=10000, 
 "State Test"=10000, "NWEA Grade 8"=10000)
 
 pdf("/tmp/sat.pdf",width=7,height=9)
@@ -61,7 +61,8 @@ for (i in 1:length(L)) {
     plot(NULL,xlim=c(-2.5,5.5),ylim=c(-.18,.18),xlab='',ylab='',yaxt='n')
     axis(side=2,at=c(-.1,0,.1))
     legend("topleft",bty='n',legend=names(L)[i])
-    abline(v=timelimits[names(filenames)[i] ],col='gray',lwd=3)
+    tl<-as.numeric(timelimits[[names(filenames)[i] ]])
+    segments(tl,-100,tl,.1,col='gray',lwd=3)
     abline(h=0,col='gray')
     if (i==16) {
         mtext(side=1,'log(t)',line=2,cex=1)
@@ -78,8 +79,8 @@ for (i in 1:length(L)) {
         dy<-min(den[,2])
         polygon(c(den[,1],rev(den[,1])),c(rep(dy,nrow(den)),rev(den[,2])),col=col,border=NA)
     }
-    tmp<-L[[i]]$sat$pts
-    lines(tmp[,1:2],col="blue",lwd=3)
+    tmp<-L[[i]]$pts
+    lines(tmp[,1:2],col="blue",lwd=1.5)
     if (ncol(tmp)>2) {
         col<-col2rgb("blue")/255
         col<-rgb(col[1],col[2],col[3],alpha=.5)
@@ -113,7 +114,7 @@ cols<-data.frame(pd=pd,col=col.out)
 
 pdf("/tmp/sat_challenge.pdf",width=7,height=9)
 nn<-length(filenames)
-m<-matrix(c(1:nn,nn+1,nn+1),nrow=5,ncol=4,byrow=TRUE)
+m<-matrix(c(1:nn,nn+1),nrow=6,ncol=3,byrow=TRUE)
 layout(m)
 par(mgp=c(2,1,0),mar=c(3,3,1,1),oma=rep(.7,4))
 for (i in 1:length(L)) {
