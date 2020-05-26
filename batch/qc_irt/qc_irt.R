@@ -25,11 +25,11 @@ qc<-function(x,repeated.trials=FALSE) {
     print(table(test))
     ## N response per item
     tab<-table(x$item)
-    tab<-tab[tab>20]
+    tab<-tab[tab>=20]
     x<-x[x$item %in% names(tab),]
     ## N responses per person
     tab<-table(x$id)
-    tab<-tab[tab>20]
+    tab<-tab[tab>=10]
     x<-x[x$id %in% names(tab),]
     ##
     x

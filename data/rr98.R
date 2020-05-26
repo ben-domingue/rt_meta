@@ -12,7 +12,7 @@ x$rt<-log(x$rt)
 
 table(table(paste(x$id,x$item)))
       
-save(x,file="/home/bd/Dropbox/projects/rt_meta/data/1_raw_main/rr98_accuracy.Rdata")
+save(x,file="/home/bd/Dropbox/projects/rt_meta/data/1_raw_main/raw_rr98_accuracy.Rdata")
 
 
 ## for (nm in names(L)) {
