@@ -20,7 +20,7 @@ person_analysis<-function(x) {
     ##
     L<-split(x,x$item)
     nn<-sapply(L,nrow)
-    L<-L[nn>99]
+    L<-L[nn>50]
     ff<-function(y) {
         ec<-ecdf(y$rt)
         y$rank<-ec(y$rt)

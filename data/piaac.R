@@ -72,27 +72,27 @@ resp<-resp[test,]
 rt<-rt[test,]
 
 ###############################################################
-library(mirt)
-m<-mirt(resp,itemtype="Rasch",1)
-th<-fscores(m)
-co<-coef(m)
-co<-co[-length(co)]
-co<-do.call("rbind",co)[,2]
+## library(mirt)
+## m<-mirt(resp,itemtype="Rasch",1)
+## th<-fscores(m)
+## co<-coef(m)
+## co<-co[-length(co)]
+## co<-do.call("rbind",co)[,2]
 
 ##create long data
 id<-1:nrow(rt)
 item<-names(resp)
 L<-list()
 for (i in 1:ncol(rt)) {
-    L[[i]]<-data.frame(resp=resp[,i],rt=rt[,i],id=id,item=item[i],th=th[,1],diff=as.numeric(-1*co[i]))
+    L[[i]]<-data.frame(resp=resp[,i],rt=rt[,i],id=id,item=item[i])#,th=th[,1],diff=as.numeric(-1*co[i]))
 }
 x<-data.frame(do.call("rbind",L))
 
-x$th-x$diff -> del
-exp(del)->k
-k/(1+k)->x$pv
+## x$th-x$diff -> del
+## exp(del)->k
+## k/(1+k)->x$pv
 
 rs<-rowSums(is.na(x))
 x<-x[rs==0,]
 
-save(x,file="~/Dropbox/projects/rt_meta/data/piaac.Rdata")
+save(x,file="/home/bd/Dropbox/projects/rt_meta/data/1_raw_main/raw_piaac.Rdata")

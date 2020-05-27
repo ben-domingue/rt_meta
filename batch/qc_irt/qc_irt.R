@@ -35,7 +35,7 @@ qc<-function(x,repeated.trials=FALSE) {
     x
 }
 
-irt<-function(x,lmer.flag) {
+irt<-function(x,lmer.flag=FALSE) {
     if (lmer.flag) { ##lmer
         library(lme4)
         m<-glmer(resp~0+(1|item)+(1|id),x,family="binomial")
@@ -81,5 +81,10 @@ irt<-function(x,lmer.flag) {
         x<-merge(x,stud)
         x<-merge(x,item)
     }
+    ##
+    kk<-x$th-x$diff
+    kk<-exp(kk)
+    x$pv<-kk/(1+kk)
+    ##
     x
 }

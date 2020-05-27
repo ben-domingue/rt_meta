@@ -1,3 +1,6 @@
+lf<-list.files(path='/home/bd/Dropbox/projects/rt_meta/data/3_ready/')
+filenames<-filenames[unlist(filenames) %in% lf]
+
 #################################################################
 ##table 1
 ff<-function(fn) {

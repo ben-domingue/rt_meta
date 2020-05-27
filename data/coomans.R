@@ -12,8 +12,8 @@ for (fn in lf) {
     names(x)<-c("id","item","rt","resp","days")
     x$id<-paste(x$id,round(x$days/10))
     #x$id<-paste(x$id,x$days)
-    tab<-table(x$id)
-    x<-x[x$id %in% names(tab)[tab>9],]
+    #tab<-table(x$id)
+    #x<-x[x$id %in% names(tab)[tab>9],]
     #print(table(x$resp))
     #print(table(table(x$item)))
     #print(table(x$id))
@@ -22,6 +22,15 @@ for (fn in lf) {
 }
 bigL<-L
 rm("L")
+
+data.frame(rbind(bigL$addition,bigL$subtraction))->bigL[['add.subtract']]
+data.frame(rbind(bigL$multiplication,bigL$division))->bigL[['multiply.divide']]
+for (ii in 1:length(bigL)) {
+    x<-bigL[[ii]]
+    x$days<-NULL
+    save(x,file=paste("/home/bd/Dropbox/projects/rt_meta/data/1_raw_main/raw_",names(bigL)[ii],".Rdata",sep=''))
+}
+
 
 for (ii in 1:length(bigL)) {
     print(ii)

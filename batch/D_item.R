@@ -15,7 +15,7 @@ item_analysis<-function(x) {
     id<-unique(x$id)
     L<-split(x,x$item)
     nn<-sapply(L,nrow)
-    L<-L[nn>100]
+    L<-L[nn>50]
     #if (length(L)>250) L<-L[sample(1:length(L),250)]
     out<-list()
     for (j in 1:length(L)) {
