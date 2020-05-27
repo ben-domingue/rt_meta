@@ -5,9 +5,7 @@ list(`RR98 Accuracy` = "rr98_accuracy.Rdata", `Hearts Flowers` = "hf_long_m2t.Rd
     Rotation = "dd_rotation.Rdata", Set = "set.Rdata", `Letter Chaos` = "letterchaos.Rdata", 
     `Add Subtract` = "add.subtract.Rdata", `Mult Div` = "multiply.divide.Rdata", 
     Chess = "chess.Rdata", Assistments = "assistments.Rdata", 
-    PIAAC = "piaac.Rdata", PISA = "pisa_sample.Rdata", 
-    `NWEA Grade 3` = "nwea_catest_longpull_Spring_3_all.Rdata",
-    #`State Test` = "stateTest.Rdata", 
+    PIAAC = "piaac.Rdata", PISA = "pisa_sample.Rdata", `NWEA Grade 3` = "nwea_catest_longpull_Spring_3_all.Rdata", 
     `NWEA Grade 8` = "nwea_catest_longpull_Spring_8_all.Rdata")
 
 

@@ -29,7 +29,7 @@ for (fn in lf) {
     x<-qc(x,repeated.trials=ifelse(fn %in% repeated.trials,TRUE,FALSE))
     x$rapid<-NULL
     print(dim(x))
-    #save(x,file=paste("/home/bd/Dropbox/projects/rt_meta/data/2_preirt/",fn,sep=''))
+    #save(x,file=paste("/home/bd/Dropbox/projects/rt_meta/data/2_preirt/",fn,sep='')) #local
     #save(x,file=paste("~/rt_meta/nwea/pre/",fn,sep='')) #ozzy
 }
 
@@ -53,7 +53,7 @@ for (fn in lf) {
     if (test) flag<-lmer.flag[[fn]] else flag<-FALSE
     x<-irt(x,lmer.flag=flag)
     fn2<-gsub("^raw_","",fn)
-    #save(x,file=paste("/home/bd/Dropbox/projects/rt_meta/data/3_ready/",fn2,sep=''))
+    #save(x,file=paste("/home/bd/Dropbox/projects/rt_meta/data/3_ready/",fn2,sep='')) #local
     #save(x,file=fn2) ##ozzy  
 }
 

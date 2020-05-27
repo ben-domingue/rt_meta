@@ -188,7 +188,7 @@ tab<-list()
 for (i in 1:length(meth.flag)) {
     fn<-filenames[[names(meth.flag)[i] ]]
     print(fn)
-    setwd("~/rt_meta/")
+    setwd("~/rt_meta/3_ready/")
     load(fn)
     tab[[fn]]<-oos_pred(x,pv.lmer=meth.flag[[i]])
     dump("tab","")
