@@ -6,6 +6,7 @@ qc<-function(x,repeated.trials=FALSE) {
     ## For those data with such flags, we excluded responses that were coded as being uninformative due to having occurred too rapidly.
     x<-x[!x$rapid,]
     ## Timed out responses
+    ##handled for individual datasets
     ## Removal of items that were never answered correctly or incorrectly
     m<-by(x$resp,x$item,mean,na.rm=TRUE)
     nms<-names(m)[m>0 & m<1]

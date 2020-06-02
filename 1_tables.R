@@ -37,3 +37,25 @@ tab<-do.call("rbind",tab)
 rownames(tab)<-names(filenames)
 library(xtable)
 xtable(tab)
+
+
+#################################################################
+##table 4
+ff<-function(fn) {
+    load(paste("proc_",fn,sep=''))
+    output$oos->tab
+    lapply(tab,unlist)
+}
+tab<-lapply(filenames,ff)
+tab1<-do.call("rbind",lapply(tab,"[[",1))
+tab2<-do.call("rbind",lapply(tab,"[[",2))
+##
+rownames(tab1)<-rownames(tab2)<-names(filenames)
+tab<-list(tab1,tab2)
+##
+ff<-function(z) {
+    library(xtable)
+    z<-z[,c("base","item","irt","rt.only","rt","rt2")]
+    xtable(z)
+}
+lapply(tab,ff)

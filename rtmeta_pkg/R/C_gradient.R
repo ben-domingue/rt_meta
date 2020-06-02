@@ -30,7 +30,7 @@ gradfield<-function(x,ran=c(-.25,.25)) {
             feols(formula(fm),x)->m
             #if (print) print(summary(m))
             ##
-            fe<-fixef(m)
+            fe<-fixest::fixef(m)
             M<-mean(fe$id)
             index<-which.min(abs(fe$id-M))
             id<-names(fe$id)[index]

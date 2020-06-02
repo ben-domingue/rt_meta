@@ -11,6 +11,7 @@ for (i in 1:40) {
 }
 x<-data.frame(do.call("rbind",L))
 
+x<-x[x$rt<30,]
 log(x$rt)->x$rt
 save(x,file="/home/bd/Dropbox/projects/rt_meta/data/1_raw_main/raw_chess.Rdata")
 

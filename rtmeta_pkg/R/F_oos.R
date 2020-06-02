@@ -1,6 +1,4 @@
 
-
-
 oos_pred<-function(x,pv.lmer=TRUE) {
     lll<-rms<-list()
     ll<-function(x,p='pv') {
@@ -58,7 +56,7 @@ oos_pred<-function(x,pv.lmer=TRUE) {
         ##mirt
         ##get item difficulties
         newdiff<-!grepl("nwea",fn)
-        newdiff<-newdiff & !grepl("assistments",fn)
+        #newdiff<-newdiff & !grepl("assistments",fn)
         #newdiff<-FALSE
         if (newdiff) {
             rs<-rowSums(!is.na(resp))
@@ -160,69 +158,6 @@ oos_pred<-function(x,pv.lmer=TRUE) {
     list(lll,rms)
 }
 
-meth.flag <-
-    list(`RR98 Accuracy` = TRUE,
-         `Hearts Flowers` = TRUE,
-         Assistments = TRUE, 
-         ##
-         Hierarchical =FALSE,
-         DD = FALSE,
-         Arithmetic =FALSE,
-         Groupitizing = FALSE, 
-         Rotation = FALSE,
-         Set = FALSE,
-         `Letter Chaos` = FALSE,
-         `Add Subtract` = FALSE,
-         `Mult Div` = FALSE, 
-         Chess = FALSE,
-         PIAAC = FALSE,
-         PISA = FALSE,
-         `NWEA Grade 3` = FALSE,
-         `NWEA Grade 8` = FALSE
-         )
 
 
 
-#setwd("/home/bd/Dropbox/projects/rt_meta/data")
-tab<-list()
-for (i in 1:length(meth.flag)) {
-    fn<-filenames[[names(meth.flag)[i] ]]
-    print(fn)
-    setwd("~/rt_meta/3_ready/")
-    load(fn)
-    tab[[fn]]<-oos_pred(x,pv.lmer=meth.flag[[i]])
-    dump("tab","")
-}
-
-
-tab.out<-list()
-for (i in 1:2) {
-    l<-lapply(tab,'[',i)
-    l<-lapply(l,unlist)
-    tab.out[[i]]<-do.call("rbind",l)
-}
-tab.out->tab
-
-ff<-function(z) {
-    library(xtable)
-    z<-z[,c("base","item","irt","rt.only","rt","rt2")]
-    index<-match(rownames(z),filenames)
-    rownames(z)<-names(filenames)[index]
-    xtable(z)
-}
-lapply(tab,ff)
-
-## par(mfrow=c(2,1),mgp=c(2,1,0),mar=c(3,10,1.5,1),xpd=NA)
-## library(gplots)
-## cols<-colorRampPalette(c("blue", "red"))( 5)
-## ##
-## tab[[1]]->tab1
-## barplot2(t(tab1),beside=TRUE,horiz=TRUE,las=2,xaxt='n',xlim=c(.5,1),xpd=FALSE,cex.names=.7,col=cols)
-## mtext(side=3,line=.2,'likelihood')
-## axis(side=1)
-## legend("topright",bty='n',fill=cols,colnames(tab1))
-## ##
-## tab[[2]]->tab2
-## barplot2(t(tab2),beside=TRUE,horiz=TRUE,las=2,xaxt='n',xlim=c(0,.5),xpd=FALSE,cex.names=.7,col=cols)
-## mtext(side=3,line=.2,'rmse')
-## axis(side=1)

@@ -51,8 +51,8 @@ ff<-function(fn) {
 L<-lapply(filenames,ff)
 
 timelimits<-c("RR98 Accuracy"=10000, "Hearts Flowers"=log(1.5), "Hierarchical"=10000, "DD"=10000, "Arithmetic"=10000, 
-"Groupitizing"=10000, "Rotation"=log(7.5), "Set"=10000, "Letter Chaos"=10000, "Add Subtract"=log(20), 
-"Mult Div"=log(20), "Chess"=10000, "Assistments"=10000, "PIAAC"=10000, "PISA"=10000, "NWEA Grade 3"=10000, 
+"Groupitizing"=10000, "Rotation"=log(7.5), "Set"=log(20), "Letter Chaos"=log(20), "Add Subtract"=log(20), 
+"Mult Div"=log(20), "Chess"=log(30), "Assistments"=10000, "PIAAC"=10000, "PISA"=10000, "NWEA Grade 3"=10000, 
 "State Test"=10000, "NWEA Grade 8"=10000)
 
 pdf("/tmp/sat.pdf",width=7,height=9)

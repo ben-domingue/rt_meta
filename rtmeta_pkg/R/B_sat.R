@@ -38,7 +38,7 @@ interplay<-function(x,std.time.in.item=FALSE,nspl=4,fe.terms='item+id',nboot=NUL
         fm.fe<-paste(fm,"|",fe.terms,sep="")
         feols(formula(fm.fe),x)->m
         ##fitted accuracy
-        fe<-fixef(m)
+        fe<-fixest::fixef(m)
         M<-mean(fe$id)
         index<-which.min(abs(fe$id-M))
         id<-names(fe$id)[index]
