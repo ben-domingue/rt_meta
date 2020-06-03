@@ -1,23 +1,30 @@
 filenames <-
 list(`RR98 Accuracy` = "rr98_accuracy.Rdata", `Hearts Flowers` = "hf_long_m2t.Rdata", 
-    Hierarchical = "vdl_long_sim.Rdata", DD = "DIFFirt_long_sim.Rdata", 
-    Arithmetic = "abcd.Rdata", Groupitizing = "abcd_group.Rdata", 
-    Rotation = "dd_rotation.Rdata", Set = "set.Rdata", `Letter Chaos` = "letterchaos.Rdata", 
-    `Add Subtract` = "add.subtract.Rdata", `Mult Div` = "multiply.divide.Rdata", 
-    Chess = "chess.Rdata", Assistments = "assistments.Rdata", 
-    PIAAC = "piaac.Rdata", PISA = "pisa_sample.Rdata", `NWEA Grade 3` = "nwea_catest_longpull_Spring_3_all.Rdata", 
+    Hierarchical = "vdl_long_sim.Rdata", MSIT = "msit.Rdata", 
+    DD = "DIFFirt_long_sim.Rdata", Arithmetic = "abcd.Rdata", 
+    Groupitizing = "abcd_group.Rdata", Rotation = "dd_rotation.Rdata", 
+    Set = "set.Rdata", `Letter Chaos` = "letterchaos.Rdata", 
+    `Add Subtract` = "add.subtract.Rdata", `Working Memory` = "working_memory.Rdata", 
+    `Mult Div` = "multiply.divide.Rdata", HRS = "hrs.Rdata", 
+    Chess = "chess.Rdata", PERC = "perc.Rdata", Assistments = "assistments.Rdata", 
+    PIAAC = "piaac.Rdata", `PISA 2015` = "pisa_sample.Rdata", 
+    `PISA 2018` = "pisa2018.Rdata", `NWEA Grade 3` = "nwea_catest_longpull_Spring_3_all.Rdata", 
     `NWEA Grade 8` = "nwea_catest_longpull_Spring_8_all.Rdata")
 
-
 ##organize them by rt 
+setwd("/home/bd/Dropbox/projects/rt_meta/data/")
 M<-numeric()
 for (i in 1:length(filenames)) {
     print(filenames[i])
-    load(filenames[[i]])
+    load(paste("./3_ready/",filenames[[i]],sep=''))
     M[i]<-mean(x$rt,na.rm=TRUE)
 }
 filenames<-filenames[order(M)]
 dump("filenames","")
+
+
+
+
 
 
 

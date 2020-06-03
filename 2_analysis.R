@@ -3,23 +3,22 @@
 #fixest
 #lme4
 
+library(rtmeta)
 lf<-list.files(path='./3_ready/')
 filenames<-filenames[unlist(filenames) %in% lf]
 
 
 
-source("/home/bd/Dropbox/projects/rt_meta/src/batch/A_desc.R")
-source("/home/bd/Dropbox/projects/rt_meta/src/batch/B_sat.R")
-source("/home/bd/Dropbox/projects/rt_meta/src/batch/C_gradient.R")
-source("/home/bd/Dropbox/projects/rt_meta/src/batch/D_item.R")
-source("/home/bd/Dropbox/projects/rt_meta/src/batch/E_person.R")
-source("/home/bd/Dropbox/projects/rt_meta/src/batch/F_oos.R")
 
 fitresults<-TRUE
 meth.flag<-list( ##need for fit analyses
     "rr98_accuracy.Rdata"=TRUE,
     "hf_long_m2t.Rdata"=TRUE,
+    "msit.Rdata"=TRUE,
     "assistments.Rdata"=TRUE,
+    "working_memory.Rdata"=TRUE,
+    ##
+    "hrs.Rdata"=FALSE,
     "vdl_long_sim.Rdata"=FALSE, 
     "DIFFirt_long_sim.Rdata"=FALSE,
     "abcd.Rdata"=FALSE,
@@ -31,7 +30,9 @@ meth.flag<-list( ##need for fit analyses
     "multiply.divide.Rdata"=FALSE, 
     "chess.Rdata"=FALSE,
     "piaac.Rdata"=FALSE,
+    "perc.Rdata"=FALSE,
     "pisa_sample.Rdata"=FALSE, 
+    "pisa_2018.Rdata"=FALSE, 
     "nwea_catest_longpull_Spring_3_all.Rdata"=FALSE,
     "nwea_catest_longpull_Spring_8_all.Rdata"=FALSE
 )

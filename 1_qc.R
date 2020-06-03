@@ -1,6 +1,7 @@
+
 ##############################################################################
 ##QC
-source("/home/bd/Dropbox/projects/rt_meta/src/batch/qc_irt/qc_irt.R")
+library(rtmeta)
 rapid.flag<-list(raw_hf_long_m2t.Rdata='ar',
                  raw_hf_long_m1t.Rdata='ar'
                  ##nwea stuff i removed in data prep
@@ -14,7 +15,9 @@ rapid.flag<-list(raw_hf_long_m2t.Rdata='ar',
 repeated.trials<-c(
     "raw_rr98_accuracy.Rdata",
     "raw_hf_long_m2t.Rdata",
-    "raw_hf_long_m1t.Rdata"
+    "raw_hf_long_m1t.Rdata",
+    "raw_msit.Rdata",
+    "raw_working_memory.Rdata"
 )
 
 
@@ -36,14 +39,16 @@ for (fn in lf) {
 
 ##############################################################################
 ##IRT
-source("/home/bd/Dropbox/projects/rt_meta/src/batch/qc_irt/qc_irt.R")
+library(rtmeta)
 setwd("/home/bd/Dropbox/projects/rt_meta/data/2_preirt")
 lf<-list.files()
 lmer.flag<-list(
     raw_rr98_accuracy.Rdata=TRUE,
     raw_hf_long_m1t.Rdata=TRUE,
     raw_hf_long_m2t.Rdata=TRUE,
-    raw_assistments.Rdata=TRUE
+    raw_assistments.Rdata=TRUE,
+    raw_msit.Rdata=TRUE,
+    raw_working_memory.Rdat=TRUE
 )
 
 for (fn in lf) {

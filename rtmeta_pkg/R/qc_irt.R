@@ -30,7 +30,8 @@ qc<-function(x,repeated.trials=FALSE) {
     x<-x[x$item %in% names(tab),]
     ## N responses per person
     tab<-table(x$id)
-    tab<-tab[tab>=10]
+    ni<-length(unique(x$item)) ##
+    tab<-tab[tab>=min(10,ni)] ##need to allow for smaller numbers of items when that is all that is available
     x<-x[x$id %in% names(tab),]
     ##
     x
