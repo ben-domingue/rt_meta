@@ -10,7 +10,7 @@ filenames<-filenames[unlist(filenames) %in% lf]
 
 
 
-fitresults<-TRUE
+fitresults<-FALSE
 meth.flag<-list( ##need for fit analyses
     "rr98_accuracy.Rdata"=TRUE,
     "hf_long_m2t.Rdata"=TRUE,
@@ -18,6 +18,8 @@ meth.flag<-list( ##need for fit analyses
     "assistments.Rdata"=TRUE,
     "working_memory.Rdata"=TRUE,
     ##
+    "ecls_flanker.Rdata"=FALSE,
+    "ecls_dccs.Rdata"=FALSE,
     "hrs.Rdata"=FALSE,
     "vdl_long_sim.Rdata"=FALSE, 
     "DIFFirt_long_sim.Rdata"=FALSE,
@@ -32,7 +34,7 @@ meth.flag<-list( ##need for fit analyses
     "piaac.Rdata"=FALSE,
     "perc.Rdata"=FALSE,
     "pisa_sample.Rdata"=FALSE, 
-    "pisa_2018.Rdata"=FALSE, 
+    "pisa2018.Rdata"=FALSE, 
     "nwea_catest_longpull_Spring_3_all.Rdata"=FALSE,
     "nwea_catest_longpull_Spring_8_all.Rdata"=FALSE
 )

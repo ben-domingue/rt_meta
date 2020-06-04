@@ -1,11 +1,11 @@
-setwd("/home/bd/Dropbox/projects/rt_meta/data/4_proc")
-lf<-list.files(path='/home/bd/Dropbox/projects/rt_meta/data/3_ready/')
+setwd("/home/bd/Dropbox/projects/rt_meta/data")
+lf<-list.files(path="./3_ready/")
 filenames<-filenames[unlist(filenames) %in% lf]
 
 #################################################################
 ##table 1
 ff<-function(fn) {
-    load(paste("proc_",fn,sep=''))
+    load(paste("./4_proc/proc_",fn,sep=''))
     output$desc1
 }
 tab<-lapply(filenames,ff)
@@ -17,7 +17,7 @@ xtable(tab)
 #################################################################
 ##table 2
 ff<-function(fn) {
-    load(paste("proc_",fn,sep=''))
+    load(paste("./4_proc/proc_",fn,sep=''))
     output$item
 }
 tab<-lapply(filenames,ff)
@@ -29,7 +29,7 @@ xtable(tab)
 #################################################################
 ##table 3
 ff<-function(fn) {
-    load(paste("proc_",fn,sep=''))
+    load(paste("./4_proc/proc_",fn,sep=''))
     output$person
 }
 tab<-lapply(filenames,ff)
@@ -42,7 +42,7 @@ xtable(tab)
 #################################################################
 ##table 4
 ff<-function(fn) {
-    load(paste("proc_",fn,sep=''))
+    load(paste("./4_proc/proc_",fn,sep=''))
     output$oos->tab
     lapply(tab,unlist)
 }

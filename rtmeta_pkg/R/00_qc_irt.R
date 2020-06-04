@@ -18,7 +18,7 @@ qc<-function(x,repeated.trials=FALSE) {
         tab<-tab[tab==1]
         x<-x[id %in% names(tab),]
     }
-    ## Should we impose a max time limit? Maybe 10x the median RT or something?
+    ## impose a max time limit: 5x the 90th percentile
     m0<-quantile(x$rt,.9,na.rm=TRUE)
     max.time<- 5*exp(m0)
     test <- x$rt<log(max.time)

@@ -1,7 +1,9 @@
+setwd("/home/bd/Dropbox/projects/rt_meta/data")
+
 #################################################################
 ##figure 1
 ff<-function(fn) {
-    load(paste("proc_",fn,sep=''))
+    load(paste("./4_proc/proc_",fn,sep=''))
     output$desc2
 }
 L<-lapply(filenames,ff)
@@ -48,7 +50,7 @@ dev.off()
 #################################################################
 ##figure 2
 ff<-function(fn) {
-    load(paste("proc_",fn,sep=''))
+    load(paste("./4_proc/proc_",fn,sep=''))
     output$sat
 }
 L<-lapply(filenames,ff)
@@ -56,8 +58,10 @@ L<-lapply(filenames,ff)
 timelimits<-c("RR98 Accuracy"=10000, "Hearts Flowers"=log(1.5), "Hierarchical"=10000, "DD"=10000, "Arithmetic"=10000, 
 "Groupitizing"=10000, "Rotation"=log(7.5), "Set"=log(20), "Letter Chaos"=log(20), "Add Subtract"=log(20), 
 "Mult Div"=log(20), "Chess"=log(30), "Assistments"=10000, "PIAAC"=10000, "PISA 2015"=10000, "NWEA Grade 3"=10000, 
-"State Test"=10000, "NWEA Grade 8"=10000,PERC=10000,MSIT=log(2.5),"Working Memory"=10000,"PISA 2018"=10000,HRS=10000
+"State Test"=10000, "NWEA Grade 8"=10000,PERC=10000,MSIT=log(2.5),"Working Memory"=10000,"PISA 2018"=10000,HRS=10000,
+'ECLS Flanker'=log(10),'ECLS DCCS'=log(10)
 )
+
 
 pdf("/tmp/sat.pdf",width=7,height=9)
 par(mfrow=c(6,4),mar=c(2,2,1,1),oma=c(2,2,.7,.7)) 
@@ -73,8 +77,8 @@ for (i in 1:length(L)) {
         mtext(side=2,'Offset to Pr(x=1)',line=2,cex=1)
     }
     resp.col<-c("firebrick1","darkorchid")
-    if (i==4) {
-        legend("topright",bty='n',c("Incorrect","Correct"),title="Density, log(t)",fill=resp.col,cex=1)
+    if (i==1) {
+        legend("bottomright",bty='n',c("Incorrect","Correct"),title="Density, log(t)",fill=resp.col,cex=.75)
     }
     for (resp in 0:1) {
         den<-L[[i]]$dens[[as.character(resp)]]
@@ -94,14 +98,14 @@ for (i in 1:length(L)) {
 dev.off()
 
 ###if you just want to make a single sat figure
-load(paste("proc_",fn,sep=''))
+    load(paste("./4_proc/proc_",fn,sep=''))
 plot(output$sat$pts)
 
 
 #################################################################
 ##figure 3
 ff<-function(fn) {
-    load(paste("proc_",fn,sep=''))
+    load(paste("./4_proc/proc_",fn,sep=''))
     output$grad
 }
 L<-lapply(filenames,ff)
@@ -123,7 +127,9 @@ cols<-data.frame(pd=pd,col=col.out)
 
 pdf("/tmp/sat_challenge.pdf",width=7,height=9)
 nn<-length(filenames)
-m<-matrix(c(1:nn,nn+1,nn+1),nrow=6,ncol=4,byrow=TRUE)
+nr<-5
+nc<-5
+m<-matrix(c(1:nn,rep(nn+1,nr*nc-nn)),nrow=nr,ncol=nc,byrow=TRUE)
 layout(m)
 par(mgp=c(2,1,0),mar=c(3,3,1,1),oma=rep(.7,4))
 for (i in 1:length(L)) {

@@ -1,15 +1,17 @@
 filenames <-
 list(`RR98 Accuracy` = "rr98_accuracy.Rdata", `Hearts Flowers` = "hf_long_m2t.Rdata", 
-    Hierarchical = "vdl_long_sim.Rdata", MSIT = "msit.Rdata", 
-    DD = "DIFFirt_long_sim.Rdata", Arithmetic = "abcd.Rdata", 
-    Groupitizing = "abcd_group.Rdata", Rotation = "dd_rotation.Rdata", 
-    Set = "set.Rdata", `Letter Chaos` = "letterchaos.Rdata", 
+    `ECLS Flanker` = "ecls_flanker.Rdata", Hierarchical = "vdl_long_sim.Rdata", 
+    `ECLS DCCS` = "ecls_dccs.Rdata", MSIT = "msit.Rdata", DD = "DIFFirt_long_sim.Rdata", 
+    Arithmetic = "abcd.Rdata", Groupitizing = "abcd_group.Rdata", 
+    Rotation = "dd_rotation.Rdata", Set = "set.Rdata", `Letter Chaos` = "letterchaos.Rdata", 
     `Add Subtract` = "add.subtract.Rdata", `Working Memory` = "working_memory.Rdata", 
     `Mult Div` = "multiply.divide.Rdata", HRS = "hrs.Rdata", 
     Chess = "chess.Rdata", PERC = "perc.Rdata", Assistments = "assistments.Rdata", 
     PIAAC = "piaac.Rdata", `PISA 2015` = "pisa_sample.Rdata", 
     `PISA 2018` = "pisa2018.Rdata", `NWEA Grade 3` = "nwea_catest_longpull_Spring_3_all.Rdata", 
     `NWEA Grade 8` = "nwea_catest_longpull_Spring_8_all.Rdata")
+
+cbind(filenames,1:length(filenames))
 
 ##organize them by rt 
 setwd("/home/bd/Dropbox/projects/rt_meta/data/")

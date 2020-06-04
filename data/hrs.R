@@ -30,7 +30,7 @@ read.dat.dct <- function(dat, dct, labels.included = "no") {
 }
 read.dat.dct(dat="H18D_R.da",dct="H18D_R.dct")->resp
 as.character(as.numeric(resp$HHID)*1000+as.numeric(resp$PN))->resp$id
-##
+
 library(sas7bdat)
 rt<-read.sas7bdat("secd_timings.sas7bdat")
 rt<-rt[rt$QDRMODE==2,] #just in-person
@@ -38,8 +38,11 @@ rt$rt<-log(rt$Time)
 rt<-rt[!is.na(rt$Path),]
 as.character(as.numeric(rt$HHID)*1000+as.numeric(rt$PN))->rt$id
 rt$Path -> rt$item
-rt<-rt[,c("id","item","rt")]
+rt<-rt[,c("id","item","rt","IgnoreMe")]
 
+visit<-read.sas7bdat("IsVisited.sas7bdat")
+
+    
 save.image(file='img.Rdata')
 
 #####################################################
@@ -110,9 +113,13 @@ for (i in 1:length(nms)) {
 nms<-c(analogy1=250,analogy2=251,analogy3=252)
 for (i in 1:length(nms)) {
     nm<-nms[i]
-    x<-rt[rt$item==paste("SecD.Cognition1.D",nm,"_",sep=''),]
+    #x<-rt[rt$item==paste("SecD.Cognition1.D",nm,"_",sep=''),]
+    ii<-grep(nms[i],rt$IgnoreMe)
+    print(table(rt$item[ii]))
+    x<-rt[ii,]
     y<-resp[[paste("QD",nm,sep='')]]
-    y<-ifelse(y %in% key[[i]],1,0)
+    y<-ifelse(y>5,NA,y)
+    y<-ifelse(y==1,1,0)
     print(mean(y,na.rm=TRUE))
     y<-data.frame(id=resp$id,resp=y)
     tmp<-merge(x,y)
@@ -144,8 +151,10 @@ for (i in 1:length(L)) {
     z->L[[i]]
 }
 x<-data.frame(do.call("rbind",L))
+NULL->x$IgnoreMe
 
 tab<-table(x$id)
 x<-x[x$id %in% names(tab)[tab==17],]
+
 
 save(x,file=paste("/home/bd/Dropbox/projects/rt_meta/data/1_raw_main/raw_hrs.Rdata",sep=""))
