@@ -40,8 +40,6 @@ as.character(as.numeric(rt$HHID)*1000+as.numeric(rt$PN))->rt$id
 rt$Path -> rt$item
 rt<-rt[,c("id","item","rt","IgnoreMe")]
 
-visit<-read.sas7bdat("IsVisited.sas7bdat")
-
     
 save.image(file='img.Rdata')
 

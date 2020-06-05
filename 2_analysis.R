@@ -10,7 +10,7 @@ filenames<-filenames[unlist(filenames) %in% lf]
 
 
 
-fitresults<-FALSE
+fitresults<-TRUE
 meth.flag<-list( ##need for fit analyses
     "rr98_accuracy.Rdata"=TRUE,
     "hf_long_m2t.Rdata"=TRUE,

@@ -12,11 +12,19 @@ tab<-lapply(L,function(x) x$vals)
 tab<-do.call("rbind",tab)
 
 pdf("/tmp/desc.pdf",width=9,height=4.5)
+##plot1
 par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(2,3,1,1),oma=rep(1,4))
 N<-length(filenames)
 cols<-rep("blue",length(filenames))
 ran<-sapply(L,function(x) range(x$den[,1]))
 plot(NULL,ylim=c(-10,10),xlim=c(.5,N+.5),xaxt="n",xlab='',ylab='log(t)',bty='n')
+#
+abline(h=log(1),col='gray',lwd=.5)
+text(.2,log(1),'1s',col="black",pos=3,cex=.5)
+abline(h=log(10),col="gray",lwd=.5)
+text(.2,log(10),"10s",col="black",pos=3,cex=.5)
+abline(h=log(60),col="gray",lwd=.5)
+text(.2,log(60),"60s",col="black",pos=3,cex=.5)
 #axis(side=1,at=1:N,as.character(1:N),cex.axis=.7,gap.axis=0)
 mtext(side=1,at=seq(1,N,by=2),text=seq(1,N,by=2),cex=.7)
 mtext(side=3,at=seq(2,N,by=2),text=seq(2,N,by=2),cex=.7)
@@ -33,7 +41,7 @@ for (i in 1:length(L)) {
     polygon(c(rep(i,nrow(d)),rev(i+d[,2])),c(d[,1],rev(d[,1])),col=col,border=NA)
     abline(v=i,lwd=.5,col='gray',lty=3)
 }
-#
+##plot2
 par(mar=c(3,3,1,7))
 plot(tab[,1:2],xlab="Mean item-level accuracy",ylab="Mean item-level log(t)",cex=0,xlim=c(0,1),ylim=c(-1,5),bty="n")
 text(tab[,1],tab[,2],1:nrow(tab),col=cols)
@@ -98,8 +106,8 @@ for (i in 1:length(L)) {
 dev.off()
 
 ###if you just want to make a single sat figure
-    load(paste("./4_proc/proc_",fn,sep=''))
-plot(output$sat$pts)
+##load(paste("./4_proc/proc_",fn,sep=''))
+##plot(output$sat$pts)
 
 
 #################################################################
