@@ -15,13 +15,28 @@ oos_pred<-function(x,pv.lmer=TRUE) {
     tab<-table(id)
     #
     if (!pv.lmer) x<-x[id %in% names(tab)[tab==1],] #mirt approach won't allow for missing
+    ##standardize time
+    x<-x[!is.na(x$rt),]
+    m<-by(x$rt,x$item,mean,na.rm=TRUE)
+    s<-by(x$rt,x$item,sd,na.rm=TRUE)
+    tmp<-data.frame(item=names(m),m=as.numeric(m),s=as.numeric(s))
+    x<-merge(x,tmp)
+    x$rt<-(x$rt-x$m)/x$s
+    NULL->x$m->x$s
     ##in & out
     n<-round(.1*nrow(x))
-    in.out<-sort(sample(1:nrow(x),n))
-    in.in<-1:nrow(x)
-    in.in<-in.in[-in.out]
-    oos<-x[in.out,]
-    x<-x[in.in,]
+    range.test<-TRUE ##want to ensure that the RT for the in-sample bit covers the full range for the oos bit
+    while (range.test) {
+        in.out<-sort(sample(1:nrow(x),n))
+        in.in<-1:nrow(x)
+        in.in<-in.in[-in.out]
+        oos<-x[in.out,]
+        tmp<-x[in.in,]
+        osr<-range(oos$rt,na.rm=TRUE)
+        isr<-range(tmp$rt,na.rm=TRUE)
+        range.test<- osr[1]<isr[1] | osr[2]>isr[2]
+    }
+    x<-tmp
     ##mirt or lmer needs to create
     ##lmer
     if (pv.lmer) {
@@ -114,44 +129,42 @@ oos_pred<-function(x,pv.lmer=TRUE) {
     df<-df[!is.na(df$resp) & !is.na(df$pv),]
     df<-df[df$itemp>0 & df$itemp<1,]
     mean(df$resp,na.rm=TRUE)->df$p000
+    ##baseline
     lll$base<-ll(df,p='p000')
     rms$base<-rmse(df,p='p000')
     lll$item<-ll(df,p='itemp')
     rms$item<-rmse(df,p='itemp')
     lll$irt<-ll(df,p='pv')
     rms$irt<-rmse(df,p='pv')
-    ##now need to add the time model, first estimating in-sample
+    ##
     NULL->x$th->x$diff->x$pv
     x<-merge(x,stud)
     x<-merge(x,item)
     x$th-x$diff -> del
     exp(del)->k
     x$pv<-k/(1+k)
-    m<-by(x$rt,x$item,mean,na.rm=TRUE)
-    s<-by(x$rt,x$item,sd,na.rm=TRUE)
-    tmp<-data.frame(item=names(m),m=as.numeric(m),s=as.numeric(s))
-    x<-merge(x,tmp)
-    x$rt<-(x$rt-x$m)/x$s
-    m2<-glm(resp~pv+rt,x,family="binomial")
-    ##
-    df<-df[!is.na(df$rt),]
-    df<-merge(df,tmp)
-    df$rt<-(df$rt-df$m)/df$s
-    df$pv.rt<-predict(m2,df,type='response')
-    lll$rt<-ll(df,p='pv.rt')
-    rms$rt<-rmse(df,p='pv.rt')
     ##splines
     library(splines)
     spl<-bs(x$rt,df=4)
+    ##models--both
     for (i in 1:ncol(spl)) spl[,i]->x[[paste("spl",i,sep='')]]
+    m2<-glm(resp~pv+rt,x,family="binomial")
     m3<-glm(resp~pv+spl1+spl2+spl3+spl4,x,family="binomial")
-    m4<-glm(resp~spl1+spl2+spl3+spl4,x,family="binomial")
+    df$pv.rt2<-predict(m2,df,type='response')
+    lll$rt.lin<-ll(df,p='pv.rt2')
+    rms$rt.lin<-rmse(df,p='pv.rt2')
     spl<-predict(spl,df$rt)
     for (i in 1:ncol(spl)) spl[,i]->df[[paste("spl",i,sep='')]]
-    df$pv.rt2<-predict(m3,df,type='response')
-    lll$rt2<-ll(df,p='pv.rt2')
-    rms$rt2<-rmse(df,p='pv.rt2')
-    df$pv.rtonly<-predict(m4,df,type='response')
+    df$pv.rt<-predict(m3,df,type='response')
+    lll$rt2<-ll(df,p='pv.rt')
+    rms$rt2<-rmse(df,p='pv.rt')
+    ##models-just time
+    m4<-glm(resp~rt,x,family="binomial")
+    m5<-glm(resp~spl1+spl2+spl3+spl4,x,family="binomial")
+    df$pv.rtonly2<-predict(m4,df,type='response')
+    lll$rt.only.lin<-ll(df,p='pv.rtonly2')
+    rms$rt.only.lin<-rmse(df,p='pv.rtonly2')
+    df$pv.rtonly<-predict(m5,df,type='response')
     lll$rt.only<-ll(df,p='pv.rtonly')
     rms$rt.only<-rmse(df,p='pv.rtonly')
     ##
