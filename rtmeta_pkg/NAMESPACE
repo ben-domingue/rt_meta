@@ -1,5 +1,6 @@
 export(
 	"qc","irt",
-	"oos_pred","person_analysis","item_analysis","gradfield","interplay","desc1","desc2"
+	"oos_pred","person_analysis","item_analysis","gradfield","interplay","desc1","desc2",
+	"plotSAT"
 )
 

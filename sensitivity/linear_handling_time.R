@@ -18,42 +18,37 @@ for (fn in filenames) {
 
 #################################################################
 ##figure 2
-
-
+##to compare with log
 pdf("/tmp/sat_lin.pdf",width=6,height=4)
 par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(3,3,1,1))
 ll<-list(Ll,Le)
 for (i in 1:length(Ll)) {
     for (ii in 1:length(ll)) {
         L<-ll[[ii]]
-        plot(NULL,xlim=#c(-2.5,5.5)
-                      range(L[[i]]$pts[,1]),
-             ylim=c(-.18,.18),xlab='',ylab='',yaxt='n')
-        axis(side=2,at=c(-.1,0,.1))
-        legend("topleft",bty='n',legend=names(L)[i])
-        #tl<-as.numeric(timelimits[[names(filenames)[i] ]])
-        #segments(tl,-100,tl,.1,col='gray',lwd=3)
-        abline(h=0,col='gray')
-        mtext(side=1,ifelse(ii==1,'log(t)','t'),line=2,cex=1)
-        mtext(side=2,'Offset to Pr(x=1)',line=2,cex=1)
-        resp.col<-c("firebrick1","darkorchid")
-        if (i==1) {
-            legend("bottomright",bty='n',c("Incorrect","Correct"),title="Density, log(t)",fill=resp.col,cex=.75)
-        }
-        for (resp in 0:1) {
-            den<-L[[i]]$dens[[as.character(resp)]]
-            col<-col2rgb(resp.col[resp+1])/255
-            col<-rgb(col[1],col[2],col[3],alpha=.5)
-            dy<-min(den[,2])
-            polygon(c(den[,1],rev(den[,1])),c(rep(dy,nrow(den)),rev(den[,2])),col=col,border=NA)
-        }
-        tmp<-L[[i]]$pts
-        lines(tmp[,1:2],col="blue",lwd=1.5)
-        if (ncol(tmp)>2) {
-            col<-col2rgb("blue")/255
-            col<-rgb(col[1],col[2],col[3],alpha=.5)
-            polygon(c(tmp[,1],rev(tmp[,1])),c(tmp[,3],rev(tmp[,4])),col=col,border=NA)
-        }
+        plotSAT(L[[i]],nm=names(L)[i],xl=range(L[[i]]$pts[,1]))
     }
+}
+dev.off()
+
+
+##for presentation
+Ll->L
+#
+timelimits<-c("RR98 Accuracy"=10000, "Hearts Flowers"=log(1.5), "Hierarchical"=10000, "DD"=10000, "Arithmetic"=10000, 
+"Groupitizing"=10000, "Rotation"=log(7.5), "Set"=log(20), "Letter Chaos"=log(20), "Add Subtract"=log(20), 
+"Mult Div"=log(20), "Chess"=log(30), "Assistments"=10000, "PIAAC"=10000, "PISA 2015"=10000, "NWEA Grade 3"=10000, 
+"State Test"=10000, "NWEA Grade 8"=10000,PERC=10000,MSIT=log(2.5),"Working Memory"=10000,"PISA 2018"=10000,HRS=10000,
+'ECLS Flanker'=log(10),'ECLS DCCS'=log(10)
+)
+pdf("/tmp/sat_lin.pdf",width=7,height=9)
+par(mfrow=c(6,4),mar=c(2,2,1,1),oma=c(2,2,.7,.7)) 
+for (i in 1:length(L)) {
+    tmp<-L[[i]]
+    nm<-names(L)[i]
+    tl<-as.numeric(timelimits[[names(filenames)[i] ]])
+    if (i==21) axtext<-TRUE else axtext<-FALSE
+    if (i==1) legendtext<-TRUE else legendtext<-FALSE
+    plotSAT(tmp,nm,#exp(tl),
+            axtext,legendtext)
 }
 dev.off()

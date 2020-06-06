@@ -3,7 +3,8 @@
 ##QC
 library(rtmeta)
 rapid.flag<-list(raw_hf_long_m2t.Rdata='ar',
-                 raw_hf_long_m1t.Rdata='ar'
+                 raw_hf_long_m1t.Rdata='ar',
+                 raw_hf_long_ft.Rdata='ar'
                  ##nwea stuff i removed in data prep
                  ## raw_nwea_longpull_Spring_3_all.Rdata='engag',
                  ## raw_nwea_longpull_Spring_3_early.Rdata='engag',
@@ -16,6 +17,7 @@ repeated.trials<-c(
     "raw_rr98_accuracy.Rdata",
     "raw_hf_long_m2t.Rdata",
     "raw_hf_long_m1t.Rdata",
+    "raw_hf_long_ft.Rdata",
     "raw_msit.Rdata",
     "raw_working_memory.Rdata"
 )
@@ -46,6 +48,7 @@ lmer.flag<-list(
     raw_rr98_accuracy.Rdata=TRUE,
     raw_hf_long_m1t.Rdata=TRUE,
     raw_hf_long_m2t.Rdata=TRUE,
+    raw_hf_long_ft.Rdata=TRUE,
     raw_assistments.Rdata=TRUE,
     raw_msit.Rdata=TRUE,
     raw_working_memory.Rdat=TRUE

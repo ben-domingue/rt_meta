@@ -1,4 +1,4 @@
-for (bl in c("m1t","m2t")) {
+for (bl in c("m1t","m2t","ft")) {
     x<-readRDS("~/Dropbox/projects/ames/data/2019f_hf_trial_clean.rds")
     x[x$block==bl,]->x
     #x[!x$ar,]->x #get rid of anticipatory responses

@@ -1,7 +1,7 @@
 filenames <-
 list(`RR98 Accuracy` = "rr98_accuracy.Rdata", `Hearts Flowers` = "hf_long_m2t.Rdata", 
-    `ECLS Flanker` = "ecls_flanker.Rdata", Hierarchical = "vdl_long_sim.Rdata", 
-    `ECLS DCCS` = "ecls_dccs.Rdata", MSIT = "msit.Rdata", DD = "DIFFirt_long_sim.Rdata", 
+    `ECLS Flanker` = "ecls_flanker.Rdata", #Hierarchical = "vdl_long_sim.Rdata", 
+    `ECLS DCCS` = "ecls_dccs.Rdata", MSIT = "msit.Rdata", #DD = "DIFFirt_long_sim.Rdata", 
     Arithmetic = "abcd.Rdata", Groupitizing = "abcd_group.Rdata", 
     Rotation = "dd_rotation.Rdata", Set = "set.Rdata", `Letter Chaos` = "letterchaos.Rdata", 
     `Add Subtract` = "add.subtract.Rdata", `Working Memory` = "working_memory.Rdata", 
@@ -53,7 +53,7 @@ for (i in 1:length(txt)) z[[txt[i] ]]<-filenames[i]
 filenames<-z
 
 ##ames
-filenames<-list.files(pattern="^hf_long*.+Rdata")
+filenames<-list.files(path="./3_ready/",pattern="hf_long*.+Rdata")
 txt<-gsub(".Rdata","",filenames,fixed=TRUE)
 z<-list()
 for (i in 1:length(txt)) z[[txt[i] ]]<-filenames[i]
