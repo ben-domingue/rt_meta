@@ -1,6 +1,8 @@
+##deprecated
+
+
 ##https://link.springer.com/article/10.1007%2Fs11336-012-9288-y
 th<-rnorm(1000,0,1)
-
 ## checking marginals for t
 ## library(rv)
 ## par(mfrow=c(1,3))
@@ -13,7 +15,6 @@ th<-rnorm(1000,0,1)
 ##     z<-rvdens(n=1,den.t,range=c(.001,d-.001))
 ##     hist(z[[1]])
 ## }
-
 simfun<-function(th,delta) {
     d<-10
     th<-th-delta
@@ -47,7 +48,6 @@ for (i in 1:length(delta)) {
 x<-data.frame(do.call("rbind",L))
 x<-x[x$t>0,] ##weirdness
 x$rt<-log(x$t)
-
 NULL->x$th->x$diff
 x->hold
 

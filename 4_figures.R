@@ -67,7 +67,7 @@ timelimits<-c("RR98 Accuracy"=10000, "Hearts Flowers"=log(1.5), "Hierarchical"=1
 "Groupitizing"=10000, "Rotation"=log(7.5), "Set"=log(20), "Letter Chaos"=log(20), "Add Subtract"=log(20), 
 "Mult Div"=log(20), "Chess"=log(30), "Assistments"=10000, "PIAAC"=10000, "PISA 2015"=10000, "NWEA Grade 3"=10000, 
 "State Test"=10000, "NWEA Grade 8"=10000,PERC=10000,MSIT=log(2.5),"Working Memory"=10000,"PISA 2018"=10000,HRS=10000,
-'ECLS Flanker'=log(10),'ECLS DCCS'=log(10)
+'ECLS Flanker'=log(10),'ECLS DCCS'=log(10),'Lexical'=10000
 )
 
 library(rtmeta)
@@ -139,28 +139,36 @@ for (i in 1:length(pr)) {
 }
 cols<-data.frame(pd=pd,col=col.out)
 
-pdf("/tmp/sat_challenge.pdf",width=7,height=9)
 nn<-length(filenames)
-nr<-5
-nc<-5
-m<-matrix(c(1:nn,rep(nn+1,nr*nc-nn)),nrow=nr,ncol=nc,byrow=TRUE)
+nr<-6
+nc<-4
+m<-matrix(c(1:nn,rep(nn+2,nr*nc-nn)),nrow=nr,ncol=nc,byrow=TRUE)
+ll<-list()
+for (i in 1:ncol(m)) cbind(m[,i],m[,i])->ll[[i]]
+m<-do.call("cbind",ll)
+m<-cbind(m,rep(nn+1,nr))
+
+pdf("/tmp/sat_challenge.pdf",width=7,height=9)
 layout(m)
 par(mgp=c(2,1,0),mar=c(3,3,1,1),oma=rep(.7,4))
 for (i in 1:length(L)) {
     z<-L[[i]]
+    #frame()
     plot(z[,1:2],col=z[,3],main=names(L)[i],xlab='',ylab='')
-    if (i==17) {
+    if (i==21) {
         mtext(side=2,line=2,"Pr(x=1)")
         mtext(side=1,line=2,"log(t)")
     }
 }
 ##color legend
-par(mar=c(2,5,.2,5))
-plot(cols$pd,rep(0,nrow(cols)),col=cols$col,pch=19,cex=.5,xaxt="n",yaxt="n",ylab="",xlab="",bty="n")
-mtext(side=2,#cols$pd[1],0,
-      las=2,format(round(cols$pd[1],2),digits=2),col=cols$col[1])
+par(mar=c(2,0.3,2,0.3))
+plot(xlim=c(-.4,1),rep(0,nrow(cols)),cols$pd,col=cols$col,pch=19,cex=.5,xaxt="n",yaxt="n",ylab="",xlab="",bty="n")
+mtext(side=1,at=0,#cols$pd[1],0,
+      #las=2,
+      format(round(cols$pd[1],2),digits=2),col=cols$col[1])
 n<-nrow(cols)
-mtext(side=4,#cols$pd[n],0,
-      las=2,paste(format(round(cols$pd[n],2),digits=2),"+",sep=""),col=cols$col[n])
-mtext(side=1,expression(frac(partialdiff*f,partialdiff*t)),cex=.9,line=-1)
+mtext(side=3,at=0,#cols$pd[n],0,
+      #las=2,
+      paste(format(round(cols$pd[n],2),digits=2),"+",sep=""),col=cols$col[n])
+text(.5,0,expression(frac(partialdiff*f,partialdiff*t)),cex=1.2)
 dev.off()

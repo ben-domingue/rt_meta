@@ -38,9 +38,9 @@ gradfield<-function(x,ran=c(-.25,.25)) {
             index<-which.min(abs(fe$item-M))
             item<-names(fe$item)[index]
             ##fitted values
-            pv<-seq(-.3,.3,by=.01)
+            pv<-seq(-.3,.3,by=.03)
             rt<-quantile(x$rt,c(.05,.95),na.rm=TRUE)
-            xv<-seq(rt[1],rt[2],length.out=500)
+            xv<-seq(rt[1],rt[2],length.out=300)
             predict(spl,xv)->tmp
             for (i in 1:ncol(tmp)) colnames(tmp)[i]<-paste("spl",i,sep="")
             ##

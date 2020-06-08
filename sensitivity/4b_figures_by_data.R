@@ -12,7 +12,7 @@ ff<-function(iii,filenames) {
                   "Groupitizing"=10000, "Rotation"=log(7.5), "Set"=log(20), "Letter Chaos"=log(20), "Add Subtract"=log(20), 
                   "Mult Div"=log(20), "Chess"=log(30), "Assistments"=10000, "PIAAC"=10000, "PISA 2015"=10000, "NWEA Grade 3"=10000, 
                   "State Test"=10000, "NWEA Grade 8"=10000,PERC=10000,MSIT=log(2.5),"Working Memory"=10000,"PISA 2018"=10000,HRS=10000,
-                  'ECLS Flanker'=log(10),'ECLS DCCS'=log(10)
+                  'ECLS Flanker'=log(10),'ECLS DCCS'=log(10),'Lexical'=10000
                   )
     ##
     for (i in 1:length(L)) {

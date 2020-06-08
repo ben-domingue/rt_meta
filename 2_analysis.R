@@ -59,6 +59,7 @@ meth.flag<-list( ##need for fit analyses
     "msit.Rdata"=TRUE,
     "assistments.Rdata"=TRUE,
     "working_memory.Rdata"=TRUE,
+    "race.Rdata"=TRUE,
     ##
     "ecls_flanker.Rdata"=FALSE,
     "ecls_dccs.Rdata"=FALSE,

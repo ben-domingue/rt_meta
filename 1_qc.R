@@ -19,7 +19,8 @@ repeated.trials<-c(
     "raw_hf_long_m1t.Rdata",
     "raw_hf_long_ft.Rdata",
     "raw_msit.Rdata",
-    "raw_working_memory.Rdata"
+    "raw_working_memory.Rdata",
+    "raw_race.Rdata"
 )
 
 
@@ -51,7 +52,8 @@ lmer.flag<-list(
     raw_hf_long_ft.Rdata=TRUE,
     raw_assistments.Rdata=TRUE,
     raw_msit.Rdata=TRUE,
-    raw_working_memory.Rdat=TRUE
+    raw_working_memory.Rdata=TRUE,
+    raw_race.Rdata=TRUE
 )
 
 for (fn in lf) {
