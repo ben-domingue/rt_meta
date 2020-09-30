@@ -1,5 +1,12 @@
-load(file="/home/bd/Dropbox/projects/abcd_bbk/data/all_items.Rdata")
+load(file="all_items.Rdata")
 df$item<-as.character(df$question_text)
+
+df[,c("item","module"),]->items
+items<-items[!duplicated(items[,1]),]
+write.table(items,'')
+
+
+
 
 df[df$grade %in% 3:8,]->df
 df[df$year %in% c(4),]->df

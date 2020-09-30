@@ -20,8 +20,12 @@ repeated.trials<-c(
     "raw_hf_long_ft.Rdata",
     "raw_msit.Rdata",
     "raw_working_memory.Rdata",
-    "raw_race.Rdata"
+    "raw_race.Rdata",
+    "raw_motion.Rdata"
 )
+
+
+
 
 
 setwd("/home/bd/Dropbox/projects/rt_meta/data/1_raw_main")
@@ -45,6 +49,7 @@ for (fn in lf) {
 library(rtmeta)
 setwd("/home/bd/Dropbox/projects/rt_meta/data/2_preirt")
 lf<-list.files()
+
 lmer.flag<-list(
     raw_rr98_accuracy.Rdata=TRUE,
     raw_hf_long_m1t.Rdata=TRUE,
@@ -53,8 +58,10 @@ lmer.flag<-list(
     raw_assistments.Rdata=TRUE,
     raw_msit.Rdata=TRUE,
     raw_working_memory.Rdata=TRUE,
-    raw_race.Rdata=TRUE
+    raw_race.Rdata=TRUE,
+    raw_motion.Rdata=TRUE
 )
+
 
 for (fn in lf) {
     print(fn)

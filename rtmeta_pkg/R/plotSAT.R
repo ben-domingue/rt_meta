@@ -2,12 +2,13 @@ plotSAT<-function(L,nm='',
                   tl=1000,
                   axtext=FALSE, #text on axes
                   legendtext=FALSE,
-                  xl=c(-2.5,5.5)
+                  xl=c(-2.5,5.5),
+                  line.col='blue'
                   )
 {
     plot(NULL,xlim=xl,ylim=c(-.18,.18),xlab='',ylab='',yaxt='n')
     axis(side=2,at=c(-.1,0,.1))
-    legend("topleft",bty='n',legend=nm)
+    legend("topleft",bty='n',legend=nm,cex=.75)
     segments(tl,-100,tl,.1,col='gray',lwd=3)
     abline(h=0,col='gray')
     if (axtext) {
@@ -26,7 +27,7 @@ plotSAT<-function(L,nm='',
         polygon(c(den[,1],rev(den[,1])),c(rep(dy,nrow(den)),rev(den[,2])),col=col,border=NA)
     }
     tmp<-L$pts
-    lines(tmp[,1:2],col="blue",lwd=1.5)
+    lines(tmp[,1:2],col=line.col,lwd=1.5)
     if (ncol(tmp)>2) {
         col<-col2rgb("blue")/255
         col<-rgb(col[1],col[2],col[3],alpha=.5)

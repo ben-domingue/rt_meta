@@ -8,6 +8,7 @@ rt<-z$RT
 resp<-z$Y
 id<-1:nrow(rt)
 item<-1:ncol(rt)
+L<-list()
 for (i in 1:ncol(rt)) {
     L[[i]]<-data.frame(resp=resp[,i],rt=rt[,i],id=id,item=item[i])
 }
@@ -21,6 +22,7 @@ rt<-z$rt
 resp<-z$x
 id<-1:nrow(rt)
 item<-1:ncol(rt)
+L<-list()
 for (i in 1:ncol(rt)) {
     L[[i]]<-data.frame(resp=resp[,i],rt=log(rt[,i]),id=id,item=item[i])#,th=th[,1],diff=-1*co[i])
 }
@@ -77,30 +79,30 @@ x$rt<-log(x$t)
 NULL->x$th->x$diff
 x->LL$SARM
 
-##race
-##DOI : 10.1007/ S 11336-013-9396-3
-get.t<-function(psi,alpha,beta) { #see eqn 8
-    ##note that i will always assume the first accumulator is the correct one (eg delta=1 for that one) and thus dispense with delta
-    z0<-alpha[1]-beta+rnorm(1)
-    z1<-alpha[2]+rnorm(1)
-    z2<-alpha[3]+rnorm(1)
-    z<-exp(c(z0,z1,z2))
-    index<-which.min(z)
-    t<-psi+z[index]
-    resp<-index-1
-    resp<-ifelse(resp==1,1,0)
-    c(resp,t)
-}
-th<-rnorm(1000) #this is beta
-psi<-runif(1000,1,2)
-library(MASS)
-alpha<-mvrnorm(50,c(0,.8,.95),matrix(c(1,.8,.6,.8,1,.85,.6,.85,1),3,3,byrow=TRUE))
-L<-list()
-for (i in 1:length(th)) for (j in 1:nrow(alpha)) L[[paste(i,j)]]<-c(i,j,get.t(psi[i],alpha=alpha[j,],beta=th[i]))
-x<-data.frame(do.call("rbind",L))
-names(x)<-c("id","item","resp","rt")
-log(x$rt)->x$rt
-x->LL$Race
+## ##race
+## ##DOI : 10.1007/ S 11336-013-9396-3
+## get.t<-function(psi,alpha,beta) { #see eqn 8
+##     ##note that i will always assume the first accumulator is the correct one (eg delta=1 for that one) and thus dispense with delta
+##     z<-numeric()
+##     z[1]<-alpha[1]-beta+rnorm(1)
+##     z[2]<-alpha[2]+rnorm(1)
+##     z[3]<-alpha[3]+rnorm(1)
+##     z<-exp(z)
+##     index<-which.min(z)
+##     t<-psi+z[index]
+##     resp<-ifelse(index==1,1,0)
+##     c(resp,t)
+## }
+## th<-rnorm(1000) #this is beta
+## psi<-runif(1000,1,2)
+## library(MASS)
+## alpha<-mvrnorm(50,c(-.5,.8,.95),matrix(c(1,.8,.6,.8,1,.85,.6,.85,1),3,3,byrow=TRUE))
+## L<-list()
+## for (i in 1:length(th)) for (j in 1:nrow(alpha)) L[[paste(i,j)]]<-c(i,j,get.t(psi[i],alpha=alpha[j,],beta=th[i]))
+## x<-data.frame(do.call("rbind",L))
+## names(x)<-c("id","item","resp","rt")
+## log(x$rt)->x$rt
+## x->LL$Race
 
 ##extended hierarchical
 library(MASS)
@@ -137,8 +139,8 @@ for (b in bpars)
 
 library(rtmeta)
 pdf("/tmp/sat_sim.pdf",width=6,height=4)
-layout(matrix(c(1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7),nrow=2,ncol=12,byrow=TRUE))
-par(mgp=c(2,1,0),mar=c(3,3,1,1))
+#layout(matrix(c(1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7),nrow=2,ncol=12,byrow=TRUE))
+par(mfrow=c(2,3),mgp=c(2,1,0),mar=c(3,3,1,1))
 for (i in 1:length(LL)) {
     x<-LL[[i]]
     ##get rid of 0 and N response strings

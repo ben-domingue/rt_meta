@@ -17,7 +17,7 @@ gradfield<-function(x,ran=c(-.25,.25)) {
         tmp<-x[,nms]
         x<-x[rowSums(is.na(tmp))==0,]
         #####
-        x$pv.center<-x$pv-mean(x$pv,na.rm=TRUE)
+        x$pv.center<-x$pv #x$pv.center<-x$pv-mean(x$pv,na.rm=TRUE)
         ##
         library(splines)
         bs(x$rt,df=nspl)->spl
@@ -38,7 +38,8 @@ gradfield<-function(x,ran=c(-.25,.25)) {
             index<-which.min(abs(fe$item-M))
             item<-names(fe$item)[index]
             ##fitted values
-            pv<-seq(-.3,.3,by=.03)
+            #pv<-seq(-.3,.3,by=.03)
+            pv<-seq(.4,1,by=.03)
             rt<-quantile(x$rt,c(.05,.95),na.rm=TRUE)
             xv<-seq(rt[1],rt[2],length.out=300)
             predict(spl,xv)->tmp

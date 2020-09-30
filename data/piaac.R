@@ -1,4 +1,5 @@
 x<-read.table("Prgusap1_2017.csv",sep="|",header=TRUE)
+x$id<-1:nrow(x)
 
 #taken from annex 17.1 of this, http://www.oecd.org/skills/piaac/PIAAC_Technical_Report_2nd_Edition_Full_Report.pdf
 #and http://www.oecd.org/skills/piaac/International%20Codebook_PIAAC%20Public-use%20File%20(PUF)%20Variables%20and%20Values.xlsx
@@ -70,6 +71,7 @@ rs<-rowSums(is.na(resp))
 test<-rs<ncol(resp)
 resp<-resp[test,]
 rt<-rt[test,]
+x<-x[test,]
 
 ###############################################################
 ## library(mirt)
@@ -80,11 +82,10 @@ rt<-rt[test,]
 ## co<-do.call("rbind",co)[,2]
 
 ##create long data
-id<-1:nrow(rt)
 item<-names(resp)
 L<-list()
 for (i in 1:ncol(rt)) {
-    L[[i]]<-data.frame(resp=resp[,i],rt=rt[,i],id=id,item=item[i])#,th=th[,1],diff=as.numeric(-1*co[i]))
+    L[[i]]<-data.frame(resp=resp[,i],rt=rt[,i],id=x$id,item=item[i],age=x$AGEG5LFSEXT)#,th=th[,1],diff=as.numeric(-1*co[i]))
 }
 x<-data.frame(do.call("rbind",L))
 

@@ -14,7 +14,7 @@ for (fn in filenames) {
 }
 
 
-pdf("/tmp/sat_hf.pdf",width=3,height=4)
+pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/SI/sat_hf.pdf",width=3,height=4)
 par(mfrow=c(3,1),mgp=c(2,1,0),mar=c(3,3,1,1))
 for (i in 1:length(L)) {
     txt<-gsub("nwea_catest_longpull_","",names(L)[i])

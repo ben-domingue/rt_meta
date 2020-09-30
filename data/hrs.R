@@ -28,12 +28,15 @@ read.dat.dct <- function(dat, dct, labels.included = "no") {
     }
     myDF
 }
+
 read.dat.dct(dat="H18D_R.da",dct="H18D_R.dct")->resp
 as.character(as.numeric(resp$HHID)*1000+as.numeric(resp$PN))->resp$id
+resp<-resp[!is.na(resp$QD171) & resp$QD171==1,] #no help or proxy
 
 library(sas7bdat)
 rt<-read.sas7bdat("secd_timings.sas7bdat")
 rt<-rt[rt$QDRMODE==2,] #just in-person
+
 rt$rt<-log(rt$Time)
 rt<-rt[!is.na(rt$Path),]
 as.character(as.numeric(rt$HHID)*1000+as.numeric(rt$PN))->rt$id
@@ -138,9 +141,6 @@ for (i in 1:length(nms)) {
     L[[names(nms)[i]]]<-tmp
 }
 
-
-
-
 ########################################################################
 for (i in 1:length(L)) {
     names(L)[i]->nm
@@ -154,5 +154,39 @@ NULL->x$IgnoreMe
 tab<-table(x$id)
 x<-x[x$id %in% names(tab)[tab==17],]
 
+
+##add age
+c(q=2018)->yrs
+1->i
+txt1<-paste("H18PR","_R",sep='')
+read.dat.dct(dat=paste(txt1,'.da',sep=''),dct=paste(txt1,'.dct',sep=''))->df2
+as.character(as.numeric(df2$HHID)*1000+as.numeric(df2$PN))->df2$hhidpn
+names(df2)<-tolower(names(df2))
+tmp<-data.frame(hhidpn=df2$hhidpn)
+z<-paste(names(yrs)[i],"x004_r",sep='')
+birth.m<-df2[[z]]
+z<-paste(names(yrs)[i],"x067_r",sep='')
+birth.y<-df2[[z]]
+tmp$birth<-(birth.m-.5)/12+birth.y
+#
+txt1<-paste("H18A","_R",sep='')
+read.dat.dct(dat=paste(txt1,'.da',sep=''),dct=paste(txt1,'.dct',sep=''))->df2
+as.character(as.numeric(df2$HHID)*1000+as.numeric(df2$PN))->df2$hhidpn
+names(df2)<-tolower(names(df2))
+##no proxy respondent
+z<-paste(names(yrs)[i],"a009",sep='')
+df2<-df2[!is.na(df2[[z]]) & df2[[z]]==1,]
+##
+tmp2<-data.frame(hhidpn=df2$hhidpn)
+z<-paste(names(yrs)[i],"a500",sep='')
+iw.m<-df2[[z]]
+z<-paste(names(yrs)[i],"a501",sep='')
+iw.y<-df2[[z]]
+tmp2$iw<-(iw.m-.5)/12+iw.y
+tmp<-merge(tmp,tmp2,all=TRUE)
+tmp$age<-tmp$iw-tmp$birth
+age<-tmp[,c("hhidpn","age")]
+
+merge(x,age,all.x=TRUE,by.x='id',by.y='hhidpn')->x
 
 save(x,file=paste("/home/bd/Dropbox/projects/rt_meta/data/1_raw_main/raw_hrs.Rdata",sep=""))

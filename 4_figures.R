@@ -11,7 +11,7 @@ L<-lapply(filenames,ff)
 tab<-lapply(L,function(x) x$vals)
 tab<-do.call("rbind",tab)
 
-pdf("/tmp/desc.pdf",width=9,height=4.5)
+pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/desc.pdf",width=9,height=4.5)
 ##plot1
 par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(2,3,1,1),oma=rep(1,4))
 N<-length(filenames)
@@ -65,24 +65,45 @@ L<-lapply(filenames,ff)
 
 timelimits<-c("RR98 Accuracy"=10000, "Hearts Flowers"=log(1.5), "Hierarchical"=10000, "DD"=10000, "Arithmetic"=10000, 
 "Groupitizing"=10000, "Rotation"=log(7.5), "Set"=log(20), "Letter Chaos"=log(20), "Add Subtract"=log(20), 
-"Mult Div"=log(20), "Chess"=log(30), "Assistments"=10000, "PIAAC"=10000, "PISA 2015"=10000, "NWEA Grade 3"=10000, 
-"State Test"=10000, "NWEA Grade 8"=10000,PERC=10000,MSIT=log(2.5),"Working Memory"=10000,"PISA 2018"=10000,HRS=10000,
-'ECLS Flanker'=log(10),'ECLS DCCS'=log(10),'Lexical'=10000
+"Mult Div"=log(20), "Chess"=log(30), "Assistments"=10000, "PIAAC"=10000, "PISA Math"=10000, "NWEA Grade 3"=10000, 
+"State Test"=10000, "NWEA Grade 8"=10000,PERC=10000,MSIT=log(2.5),"Working Memory"=10000,"PISA Reading"=10000,HRS=10000,
+'ECLS Flanker'=log(10),'ECLS DCCS'=log(10),'Lexical'=10000,'NSHAP'=10000,'MITRE-ETS'=log(90),
+'LDT'=10000,'Motion'=log(10),"Reading Fluency"=10000,"Reading Comp"=10000
 )
 
+#color by group
+kids<-c(1,3,4,5,6,7,8,9,10,11,12,17,28)
+adolescents<-c(13,14,15,16,18,21,22,27,24,29)
+adults<-c(2,20,21,23,26)
+older<-c(19,25)
+col.groups<-list(kids,adolescents,adults,older)
+line.cols<-rep('gray',length(filenames))
+line.cols[kids]<-'red'
+line.cols[adolescents]<-'blue'
+line.cols[adults]<-'green'
+line.cols[older]<-'black'
+
+#line by task
+simple<-c(1,3,4,5,6,7,8,13,14,15,17)
+complex<-c(9,10,11,12,16,18,19,20,21:29)
+
 library(rtmeta)
-pdf("/tmp/sat.pdf",width=7,height=9)
-par(mfrow=c(6,4),mar=c(2,2,1,1),oma=c(2,2,.7,.7)) 
+pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/sat.pdf",width=7,height=9)
+par(mfrow=c(6,5),mar=c(2,2,1,1),oma=c(2,2,.7,.7)) 
 for (i in 1:length(L)) {
     tmp<-L[[i]]
-    nm<-names(L)[i]
+    nm<-paste(i,names(L)[i])
+    if (i %in% simple) nm<-tolower(nm)
+    if (i %in% complex) nm<-toupper(nm)
     tl<-as.numeric(timelimits[[names(filenames)[i] ]])
-    if (i==21) axtext<-TRUE else axtext<-FALSE
+    if (i==26) axtext<-TRUE else axtext<-FALSE
     if (i==1) legendtext<-TRUE else legendtext<-FALSE
-    plotSAT(tmp,nm,tl,axtext,legendtext)
+    plotSAT(tmp,nm,tl,axtext,legendtext,line.col=line.cols[i])
 }
+plot(NULL,xlim=0:1,ylim=0:1,xaxt='n',yaxt='n',bty='n',xlab='',ylab='')
+legend("topright",fill=c("red","blue","green","black","white","white"),border=NA,c("Children","Adolescents","Adults","Older Adults","simple","COMPLEX"),bty='n')
 dev.off()
-
+       
 ## for (i in 1:length(L)) {
 ##     plot(NULL,xlim=c(-2.5,5.5),ylim=c(-.18,.18),xlab='',ylab='',yaxt='n')
 ##     axis(side=2,at=c(-.1,0,.1))
@@ -141,21 +162,21 @@ cols<-data.frame(pd=pd,col=col.out)
 
 nn<-length(filenames)
 nr<-6
-nc<-4
+nc<-5
 m<-matrix(c(1:nn,rep(nn+2,nr*nc-nn)),nrow=nr,ncol=nc,byrow=TRUE)
 ll<-list()
 for (i in 1:ncol(m)) cbind(m[,i],m[,i])->ll[[i]]
 m<-do.call("cbind",ll)
 m<-cbind(m,rep(nn+1,nr))
 
-pdf("/tmp/sat_challenge.pdf",width=7,height=9)
+pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/sat_challenge.pdf",width=7,height=9)
 layout(m)
 par(mgp=c(2,1,0),mar=c(3,3,1,1),oma=rep(.7,4))
 for (i in 1:length(L)) {
     z<-L[[i]]
     #frame()
     plot(z[,1:2],col=z[,3],main=names(L)[i],xlab='',ylab='')
-    if (i==21) {
+    if (i==26) {
         mtext(side=2,line=2,"Pr(x=1)")
         mtext(side=1,line=2,"log(t)")
     }
@@ -171,4 +192,31 @@ mtext(side=3,at=0,#cols$pd[n],0,
       #las=2,
       paste(format(round(cols$pd[n],2),digits=2),"+",sep=""),col=cols$col[n])
 text(.5,0,expression(frac(partialdiff*f,partialdiff*t)),cex=1.2)
+dev.off()
+
+#################################################################
+##figure 4
+ff<-function(fn) {
+    load(paste("./4_proc/proc_",fn,sep=''))
+    output$oos
+}
+out<-lapply(filenames,ff)
+    
+##
+tab<-lapply(out,"[[",1)
+tab<-lapply(tab,unlist)
+tab<-do.call("cbind",tab)
+offset<-0.3
+z<-tab-offset
+library(gplots)
+
+pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/fit.pdf",width=7,height=9)
+par(mgp=c(2,1,0),mar=c(3,10,1,1),oma=rep(.5,4))
+#cols<-c("gray","pink","red","blue","darkblue","green")
+cols<-colorRampPalette(c("royalblue", "red"))(6)
+barplot2(z,beside=TRUE,horiz=TRUE,las=2,col=cols,xlim=c(0,.6),cex.names=.8,xaxt='n',xlab="Likelihood")
+axis(side=1,at=seq(0,1,by=.1),seq(offset,1+offset,by=.1))
+for (h in seq(0,1,by=.1)) abline(v=h,col='gray',lwd=.5)
+rownames(z)<-c("Mean","Item mean","Response mean","RT mean","RT mean, correct","Response + RT")
+legend("topright",bty='n',paste(rev(LETTERS[1:6]),rev(rownames(z))),fill=rev(cols),cex=.75)
 dev.off()

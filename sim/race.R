@@ -1,20 +1,24 @@
 ##DOI : 10.1007/ S 11336-013-9396-3
 get.t<-function(psi,alpha,beta) { #see eqn 8
     ##note that i will always assume the first accumulator is the correct one (eg delta=1 for that one) and thus dispense with delta
-    z0<-alpha[1]-beta+rnorm(1)
-    z1<-alpha[2]+rnorm(1)
-    z2<-alpha[3]+rnorm(1)
-    z<-exp(c(z0,z1,z2))
+    z<-numeric()
+    z[1]<-alpha[1]-beta+rnorm(1)
+    z[2]<-alpha[2]+rnorm(1)
+    z[3]<-alpha[3]+rnorm(1)
+    z<-exp(z)
     index<-which.min(z)
     t<-psi+z[index]
-    resp<-index-1
-    resp<-ifelse(resp==1,1,0)
+    resp<-ifelse(index==1,1,0)
     c(resp,t)
 }
-th<-rnorm(100) #this is beta
-psi<-runif(100,1,2)
+th<-rnorm(500) #this is beta
+psi<-runif(500,1,2)
 library(MASS)
-alpha<-mvrnorm(10,c(0,.8,.95),matrix(c(1,.8,.6,.8,1,.85,.6,.85,1),3,3,byrow=TRUE))
+#alpha<-mvrnorm(10,c(0,.8,.95),matrix(c(1,.8,.6,.8,1,.85,.6,.85,1),3,3,byrow=TRUE))
+#alpha<-mvrnorm(10,c(-1,.8,.95),matrix(c(1,.5,.5,.5,1,.5,.5,.5,1),3,3,byrow=TRUE))
+#alpha<-mvrnorm(10,rep(0,3),matrix(c(1,.5,.5,.5,1,.5,.5,.5,1),3,3,byrow=TRUE))
+alpha<-mvrnorm(25,c(1,-.8,-.95),matrix(c(1,-.25,-.25,-.25,1,.5,-.25,.5,1),3,3,byrow=TRUE))
+
 L<-list()
 for (i in 1:length(th)) for (j in 1:nrow(alpha)) L[[paste(i,j)]]<-c(i,j,get.t(psi[i],alpha=alpha[j,],beta=th[i]))
 x<-data.frame(do.call("rbind",L))
@@ -23,6 +27,7 @@ names(x)<-c("id","item","resp","rt")
 
 
 library(rtmeta)
+log(x$rt)->x$rt
 x<-irt(x)
 L<-interplay(x)#,nboot=250)
 plotSAT(L,nm='',xl=range(L$pts[,1]))
