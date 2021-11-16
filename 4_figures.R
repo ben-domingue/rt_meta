@@ -11,20 +11,25 @@ L<-lapply(filenames,ff)
 tab<-lapply(L,function(x) x$vals)
 tab<-do.call("rbind",tab)
 
-pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/desc.pdf",width=9,height=4.5)
+#pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/desc.pdf",width=9,height=4.5)
+pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the SAT___PNAS/desc.pdf",width=5,height=5)
+
 ##plot1
-par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(2,3,1,1),oma=rep(1,4))
+par(mfrow=c(2,1),mgp=c(2,1,0),mar=c(2,3,1,1),oma=rep(1,4))
 N<-length(filenames)
 cols<-rep("blue",length(filenames))
 ran<-sapply(L,function(x) range(x$den[,1]))
 plot(NULL,ylim=c(-10,10),xlim=c(.5,N+.5),xaxt="n",xlab='',ylab='log(t)',bty='n')
 #
 abline(h=log(1),col='gray',lwd=.5)
-text(.2,log(1),'1s',col="black",pos=3,cex=.5)
+                                        #text(.2,log(1),'1s',col="black",pos=3,cex=.5)
+mtext(side=4,at=log(1),'1s',line=0,cex=.7,las=2)
 abline(h=log(10),col="gray",lwd=.5)
-text(.2,log(10),"10s",col="black",pos=3,cex=.5)
+                                        #text(.2,log(10),"10s",col="black",pos=3,cex=.5)
+mtext(side=4,at=log(10),'10s',line=0,cex=.7,las=2)
 abline(h=log(60),col="gray",lwd=.5)
-text(.2,log(60),"60s",col="black",pos=3,cex=.5)
+#text(.2,log(60),"60s",col="black",pos=3,cex=.5)
+mtext(side=4,at=log(60),'60s',line=0,cex=.7,las=2)
 #axis(side=1,at=1:N,as.character(1:N),cex.axis=.7,gap.axis=0)
 mtext(side=1,at=seq(1,N,by=2),text=seq(1,N,by=2),cex=.7)
 mtext(side=3,at=seq(2,N,by=2),text=seq(2,N,by=2),cex=.7)
@@ -42,11 +47,15 @@ for (i in 1:length(L)) {
     abline(v=i,lwd=.5,col='gray',lty=3)
 }
 ##plot2
-par(mar=c(3,3,1,7))
+par(mar=c(3,3,1,10))
 plot(tab[,1:2],xlab="Mean item-level accuracy",ylab="Mean item-level log(t)",cex=0,xlim=c(0,1),ylim=c(-1,5),bty="n")
 text(tab[,1],tab[,2],1:nrow(tab),col=cols)
-places<-seq(min(tab[,2]),max(tab[,2]),length.out=nrow(tab))
-mtext(side=4,las=2,at=places,rev(paste(1:nrow(tab),names(filenames))),cex=.7,col='black',line=.2)
+# places<-seq(min(tab[,2]),max(tab[,2]),length.out=nrow(tab))
+# mtext(side=4,las=2,at=places,rev(paste(1:nrow(tab),names(filenames))),cex=.7,col='black',line=.2)
+places<-seq(-1,5,length.out=ceiling(nrow(tab)/2))
+mp<-ceiling(nrow(tab)/2)
+mtext(side=4,las=2,at=places,rev(paste(1:nrow(tab),names(filenames)))[1:mp],cex=.7,col='black',line=5.2)
+mtext(side=4,las=2,at=places[-1],rev(paste(1:nrow(tab),names(filenames)))[(mp+1):nrow(tab)],cex=.7,col='black',line=.2)
 abline(h=log(1),col='black')
 text(.2,log(1),'1s',col="black",pos=3,cex=.8)
 abline(h=log(10),col="black")
@@ -84,57 +93,53 @@ line.cols[adults]<-'green'
 line.cols[older]<-'black'
 
 #line by task
-simple<-c(1,3,4,5,6,7,8,13,14,15,17)
-complex<-c(9,10,11,12,16,18,19,20,21:29)
+#simple<-c(1,3,4,5,6,7,8,13,14,15,17)
+#complex<-c(9,10,11,12,16,18,19,20,21:29)
+
+
+## ##pnas
+## library(rtmeta)
+## pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the SAT___PNAS/sat.pdf",width=9,height=5)
+## par(mfrow=c(3,10),mar=c(1,1,.3,.3),oma=c(3,3,.7,.7)) 
+## for (i in 1:length(L)) {
+##     tmp<-L[[i]]
+##     nm<-paste(i,names(L)[i])
+##     #if (i %in% simple) nm<-tolower(nm)
+##     #if (i %in% complex) nm<-toupper(nm)
+##     tl<-as.numeric(timelimits[[names(filenames)[i] ]])
+##     if (i==21) axtext<-TRUE else axtext<-FALSE
+##     #if (i==1) legendtext<-TRUE else legendtext<-FALSE
+##     xaxt<-ifelse(axtext,'s','n')
+##     plotSAT(tmp,'',tl,axtext,legendtext=FALSE,line.col=line.cols[i],
+##             plot.rt.density=FALSE,xaxt=xaxt,yax=axtext,
+##             lwd=2.3)
+##     mtext(side=3,line=0,names(L)[i],cex=.6)
+## }
+## plot(NULL,xlim=0:1,ylim=0:1,xaxt='n',yaxt='n',bty='n',xlab='',ylab='')
+## #legend("topright",fill=c("red","blue","green","black","white","white"),border=NA,c("Children","Adolescents","Adults","Older Adults","simple","COMPLEX"),bty='n')
+## legend("topleft",fill=c("red","blue","green","black"),border=NA,c("Children","Adolescents","Adults","Older Adults"),bty='n',cex=.63)
+## dev.off()
 
 library(rtmeta)
 pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/sat.pdf",width=7,height=9)
-par(mfrow=c(6,5),mar=c(2,2,1,1),oma=c(2,2,.7,.7)) 
+par(mfrow=c(6,5),mar=c(2,2,1.5,.5),oma=c(2,2,.7,.7)) 
 for (i in 1:length(L)) {
     tmp<-L[[i]]
     nm<-paste(i,names(L)[i])
-    if (i %in% simple) nm<-tolower(nm)
-    if (i %in% complex) nm<-toupper(nm)
+    #if (i %in% simple) nm<-tolower(nm)
+    #if (i %in% complex) nm<-toupper(nm)
     tl<-as.numeric(timelimits[[names(filenames)[i] ]])
     if (i==26) axtext<-TRUE else axtext<-FALSE
     if (i==1) legendtext<-TRUE else legendtext<-FALSE
-    plotSAT(tmp,nm,tl,axtext,legendtext,line.col=line.cols[i])
+    plotSAT(tmp,'',tl,axtext,legendtext,line.col=line.cols[i])
+    mtext(side=3,line=0,names(L)[i],cex=.8)
 }
 plot(NULL,xlim=0:1,ylim=0:1,xaxt='n',yaxt='n',bty='n',xlab='',ylab='')
-legend("topright",fill=c("red","blue","green","black","white","white"),border=NA,c("Children","Adolescents","Adults","Older Adults","simple","COMPLEX"),bty='n')
+#legend("topright",fill=c("red","blue","green","black","white","white"),border=NA,c("Children","Adolescents","Adults","Older Adults","simple","COMPLEX"),bty='n')
+legend("topright",fill=c("red","blue","green","black"),border=NA,c("Children","Adolescents","Adults","Older Adults"),bty='n',cex=1.2)
 dev.off()
-       
-## for (i in 1:length(L)) {
-##     plot(NULL,xlim=c(-2.5,5.5),ylim=c(-.18,.18),xlab='',ylab='',yaxt='n')
-##     axis(side=2,at=c(-.1,0,.1))
-##     legend("topleft",bty='n',legend=names(L)[i])
-##     tl<-as.numeric(timelimits[[names(filenames)[i] ]])
-##     segments(tl,-100,tl,.1,col='gray',lwd=3)
-##     abline(h=0,col='gray')
-##     if (i==21) {
-##         mtext(side=1,'log(t)',line=2,cex=1)
-##         mtext(side=2,'Offset to Pr(x=1)',line=2,cex=1)
-##     }
-##     resp.col<-c("firebrick1","darkorchid")
-##     if (i==1) {
-##         legend("bottomright",bty='n',c("Incorrect","Correct"),title="Density, log(t)",fill=resp.col,cex=.75)
-##     }
-##     for (resp in 0:1) {
-##         den<-L[[i]]$dens[[as.character(resp)]]
-##         col<-col2rgb(resp.col[resp+1])/255
-##         col<-rgb(col[1],col[2],col[3],alpha=.5)
-##         dy<-min(den[,2])
-##         polygon(c(den[,1],rev(den[,1])),c(rep(dy,nrow(den)),rev(den[,2])),col=col,border=NA)
-##     }
-##     tmp<-L[[i]]$pts
-##     lines(tmp[,1:2],col="blue",lwd=1.5)
-##     if (ncol(tmp)>2) {
-##         col<-col2rgb("blue")/255
-##         col<-rgb(col[1],col[2],col[3],alpha=.5)
-##         polygon(c(tmp[,1],rev(tmp[,1])),c(tmp[,3],rev(tmp[,4])),col=col,border=NA)
-##     }
-## }
-## dev.off()
+
+
 
 
 #################################################################
@@ -161,22 +166,25 @@ for (i in 1:length(pr)) {
 cols<-data.frame(pd=pd,col=col.out)
 
 nn<-length(filenames)
-nr<-6
-nc<-5
+nr<-3
+nc<-10
 m<-matrix(c(1:nn,rep(nn+2,nr*nc-nn)),nrow=nr,ncol=nc,byrow=TRUE)
 ll<-list()
 for (i in 1:ncol(m)) cbind(m[,i],m[,i])->ll[[i]]
 m<-do.call("cbind",ll)
 m<-cbind(m,rep(nn+1,nr))
 
-pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/sat_challenge.pdf",width=7,height=9)
+##pnas
+pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the SAT___PNAS/sat_challenge.pdf",width=9,height=5)
 layout(m)
-par(mgp=c(2,1,0),mar=c(3,3,1,1),oma=rep(.7,4))
+par(mgp=c(2,1,0),mar=c(1,1,.3,.3),oma=c(3,3,.7,.7))
 for (i in 1:length(L)) {
     z<-L[[i]]
     #frame()
-    plot(z[,1:2],col=z[,3],main=names(L)[i],xlab='',ylab='')
-    if (i==26) {
+    ax<- ifelse(i==21,'s','n')
+    plot(z[,1:2],col=z[,3],main='',xlab='',ylab='',xaxt=ax,yaxt=ax)
+    mtext(side=3,line=0,names(L)[i],cex=.6)
+    if (i==21) {
         mtext(side=2,line=2,"Pr(x=1)")
         mtext(side=1,line=2,"log(t)")
     }
@@ -186,13 +194,39 @@ par(mar=c(2,0.3,2,0.3))
 plot(xlim=c(-.4,1),rep(0,nrow(cols)),cols$pd,col=cols$col,pch=19,cex=.5,xaxt="n",yaxt="n",ylab="",xlab="",bty="n")
 mtext(side=1,at=0,#cols$pd[1],0,
       #las=2,
-      format(round(cols$pd[1],2),digits=2),col=cols$col[1])
+      cex=.8,format(round(cols$pd[1],2),digits=2),col=cols$col[1])
 n<-nrow(cols)
 mtext(side=3,at=0,#cols$pd[n],0,
-      #las=2,
-      paste(format(round(cols$pd[n],2),digits=2),"+",sep=""),col=cols$col[n])
+                                        #las=2,
+      cex=.8,paste(format(round(cols$pd[n],2),digits=2),"+",sep=""),col=cols$col[n])
 text(.5,0,expression(frac(partialdiff*f,partialdiff*t)),cex=1.2)
 dev.off()
+
+## pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/sat_challenge.pdf",width=7,height=9)
+## layout(m)
+## par(mgp=c(2,1,0),mar=c(3,3,1,1),oma=rep(.7,4))
+## for (i in 1:length(L)) {
+##     z<-L[[i]]
+##     #frame()
+##     plot(z[,1:2],col=z[,3],main='',xlab='',ylab='')
+##     mtext(side=3,line=0,names(L)[i],cex=.8)
+##     if (i==26) {
+##         mtext(side=2,line=2,"Pr(x=1)")
+##         mtext(side=1,line=2,"log(t)")
+##     }
+## }
+## ##color legend
+## par(mar=c(2,0.3,2,0.3))
+## plot(xlim=c(-.4,1),rep(0,nrow(cols)),cols$pd,col=cols$col,pch=19,cex=.5,xaxt="n",yaxt="n",ylab="",xlab="",bty="n")
+## mtext(side=1,at=0,#cols$pd[1],0,
+##       #las=2,
+##       format(round(cols$pd[1],2),digits=2),col=cols$col[1])
+## n<-nrow(cols)
+## mtext(side=3,at=0,#cols$pd[n],0,
+##       #las=2,
+##       paste(format(round(cols$pd[n],2),digits=2),"+",sep=""),col=cols$col[n])
+## text(.5,0,expression(frac(partialdiff*f,partialdiff*t)),cex=1.2)
+## dev.off()
 
 #################################################################
 ##figure 4
@@ -200,7 +234,7 @@ ff<-function(fn) {
     load(paste("./4_proc/proc_",fn,sep=''))
     output$oos
 }
-out<-lapply(filenames,ff)
+out<-lapply(rev(filenames),ff)
     
 ##
 tab<-lapply(out,"[[",1)
@@ -213,7 +247,9 @@ library(gplots)
 pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/fit.pdf",width=7,height=9)
 par(mgp=c(2,1,0),mar=c(3,10,1,1),oma=rep(.5,4))
 #cols<-c("gray","pink","red","blue","darkblue","green")
-cols<-colorRampPalette(c("royalblue", "red"))(6)
+#cols<-colorRampPalette(c("royalblue", "red"))(6)
+library(colorspace)
+cols<-rainbow_hcl(6)
 barplot2(z,beside=TRUE,horiz=TRUE,las=2,col=cols,xlim=c(0,.6),cex.names=.8,xaxt='n',xlab="Likelihood")
 axis(side=1,at=seq(0,1,by=.1),seq(offset,1+offset,by=.1))
 for (h in seq(0,1,by=.1)) abline(v=h,col='gray',lwd=.5)

@@ -34,7 +34,9 @@ meth.flag<-list( ##need for fit analyses
     "nwea_catest_longpull_Spring_3_all.Rdata"=FALSE,
     "nwea_catest_longpull_Spring_8_all.Rdata"=FALSE,
     "nshap.Rdata"=FALSE,
-    "mitre.Rdata"=FALSE
+    "mitre.Rdata"=FALSE,
+    "santaclara_readcomprehension.Rdata"=FALSE,
+    "santaclara_readfluency.Rdata"=FALSE
 )
 
 dont<-c("nwea_catest_longpull_Spring_3_all.Rdata",
@@ -70,9 +72,11 @@ ew<-function(p1,p0) (p1-p0)/p0
 tab->newtab
 for (i in 1:nrow(tab)) for (j in 2:ncol(tab)) ew(p1=tab[i,j],p0=tab[i,1])->newtab[i,j]
 
+ew(tab[1,3],tab[1,2])
+
 par(mgp=c(2,1,0),mar=c(3,3,1,10),oma=rep(.5,4))
 al<-c(-.05,.2)
-plot(newtab[,c(2,4)],type='n',bty='n',ylim=al,xlim=al,xlab="E(W) based on response accuracy (C in F4)",ylab="E(W) based on accuracy + time (F in F4)")
+plot(newtab[,c(2,4)],type='n',bty='n',ylim=al,xlim=al,xlab="IMV based on accuracy",ylab="IMV based on accuracy + time")
 cols<-ifelse(newtab[,2]<0,'red','black')
 text(newtab[,2],newtab[,4],1:nrow(newtab),cex=.7,col=cols)
 abline(v=0,col='gray')
@@ -81,3 +85,4 @@ abline(0,1,col='gray',lty=2)
 index<-seq(al[1],al[2],length.out=nrow(newtab))
 nms<-paste(1:nrow(newtab),rownames(newtab))
 for (i in 1:nrow(newtab)) mtext(side=4,nms[i],las=2,at=index[i],col=cols[i])
+
