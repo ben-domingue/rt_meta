@@ -138,9 +138,9 @@ for (b in bpars)
 
 
 library(rtmeta)
-pdf("/tmp/sat_sim.pdf",width=6,height=4)
+pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/SI/sat_sim.pdf",width=6,height=4)
 #layout(matrix(c(1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7),nrow=2,ncol=12,byrow=TRUE))
-par(mfrow=c(2,3),mgp=c(2,1,0),mar=c(3,3,1,1))
+par(mfrow=c(2,3),mgp=c(2,1,0),mar=c(3,3,1,1),oma=c(1,1,.1,.1))
 for (i in 1:length(LL)) {
     x<-LL[[i]]
     ##get rid of 0 and N response strings
@@ -151,5 +151,7 @@ for (i in 1:length(LL)) {
     x<-irt(x)
     L<-interplay(x)#,nboot=250)
     plotSAT(L,nm=names(LL)[i],xl=range(L$pts[,1]))
+    if (i %in% c(1,4)) mtext(side=2,line=2,"Offset to Pr(x=1)")
+    if (i>3) mtext(side=1,line=2,"RT")
 }
 dev.off()

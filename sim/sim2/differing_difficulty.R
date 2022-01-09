@@ -62,10 +62,12 @@ pf<-function(tab) {
          xlab=expression(b[1]),ylab=expression(c[t]),
          xlim=c(-1,1),ylim=ran
          )
-    mtext(side=3,line=0,paste("rho=",unique(tab$rho),sep=''))
+    txt<-bquote(rho~"="~.(unique(tab$rho)))
+    mtext(side=3,line=0,txt)
     if (unique(tab$rho)<0) {
         legend("topleft",bty='n',fill=cols,as.character(round(diffs,2)),title=expression(bar(delta)))
-        legend("bottomright",bty='n',pch=c(1,19),legend=as.character(unique(tab$sd.load)),title="SD(alpha)")
+        txt<-bquote("SD("~alpha~")="~.(as.character(unique(tab$sd.load))))
+        legend("bottomright",bty='n',fill=NULL,legend=txt,border=NA)
     }
 }
 ran<-range(tab0$est.rt)
