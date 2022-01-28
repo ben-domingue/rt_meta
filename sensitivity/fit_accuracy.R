@@ -110,15 +110,15 @@ offset<-0.5
 z<-tab-offset
 library(gplots)
 
-pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/acc.pdf",width=7,height=9)
+#pdf("/home/bd/Dropbox/Apps/Overleaf/Variation in the speed-accuracy tradeoff/acc.pdf",width=7,height=9)
 par(mgp=c(2,1,0),mar=c(3,10,1,1),oma=rep(.5,4))
 #cols<-c("gray","pink","red","blue","darkblue","green")
 #cols<-colorRampPalette(c("royalblue", "red"))(6)
 library(colorspace)
 cols<-rainbow_hcl(6)
-barplot2(z,beside=TRUE,horiz=TRUE,las=2,col=cols,xlim=c(0,.5),cex.names=.8,xaxt='n',xlab="Accuracy")
+barplot2(z,beside=TRUE,horiz=TRUE,las=2,col=cols,xlim=c(0,.5),cex.names=.8,xaxt='n',xlab="0-1 Loss")
 axis(side=1,at=seq(0,1,by=.1),seq(offset,1+offset,by=.1))
 for (h in seq(0,1,by=.1)) abline(v=h,col='gray',lwd=.5)
 rownames(z)<-c("Mean","Item mean","Response mean","RT mean","RT mean, correct","Response + RT")
 legend("bottomright",bty='n',paste(rev(LETTERS[1:6]),rev(rownames(z))),fill=rev(cols),cex=.75)
-dev.off()
+#dev.off()
